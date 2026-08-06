@@ -3,59 +3,47 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1.0">
-<title>Hidden Inventory</title>
+<title>Hidden Inventory V3</title>
 <link href="https://fonts.googleapis.com/css2?family=Patrick+Hand&display=swap" rel="stylesheet">
 <style>
 *{margin:0;padding:0;box-sizing:border-box;font-family:'Patrick Hand',cursive}
-html{overflow-x:hidden}
-body{display:flex;color:#fff;background:linear-gradient(-45deg,#111,#181818,#101010,#1b1b1b);background-size:400% 400%;animation:bg 12s ease infinite}
-@keyframes bg{0%{background-position:0 50%}50%{background-position:100% 50%}100%{background-position:0 50%}}
-body:before{content:"";position:fixed;width:340px;height:340px;border-radius:50%;background:rgba(92,200,255,.08);filter:blur(80px);pointer-events:none;left:var(--x);top:var(--y);transform:translate(-50%,-50%);transition:left .08s linear,top .08s linear;z-index:-1}
-.sidebar{position:fixed;width:260px;height:100vh;background:#0b0b0b;border-right:2px solid #1f1f1f;padding:25px;box-shadow:0 0 25px rgba(0,0,0,.4)}
-.logo{font-size:42px;line-height:42px;margin-bottom:40px;animation:float 4s ease-in-out infinite}
+html{scroll-behavior:smooth}
+body{background:linear-gradient(-45deg,#0d0d0d,#151515,#111827,#151515);background-size:400% 400%;animation:bg 18s ease infinite;color:#fff;overflow:hidden}
+@keyframes bg{0%,100%{background-position:0 50%}50%{background-position:100% 50%}}
+#particles{position:fixed;inset:0;pointer-events:none}
+.sidebar{position:fixed;left:20px;top:20px;bottom:20px;width:260px;background:rgba(20,20,20,.55);backdrop-filter:blur(16px);border:1px solid rgba(255,255,255,.08);border-radius:22px;padding:22px;box-shadow:0 0 30px rgba(0,0,0,.4)}
+.logo{font-size:42px;margin-bottom:30px;animation:float 4s ease-in-out infinite}
 @keyframes float{50%{transform:translateY(-8px)}}
-.nav button{width:100%;margin-bottom:15px;padding:18px;background:#111;color:#fff;border:2px solid #444;font-size:28px;cursor:pointer;transition:.25s}
-.nav button:hover{border-color:#55bfff;transform:translateX(8px);box-shadow:0 0 15px #55bfff}
-.nav button:active{transform:scale(.96)}
-.nav button.active{border-color:#5cc8ff;animation:glow 2s infinite alternate}
-@keyframes glow{from{box-shadow:0 0 8px #5cc8ff}to{box-shadow:0 0 24px #5cc8ff}}
-.content{margin-left:260px;padding:45px;width:100%}
-.page{display:none}
-.page.active{display:block;animation:fade .4s ease}
-@keyframes fade{from{opacity:0;transform:translateY(20px)}to{opacity:1;transform:translateY(0)}}
-h1{font-size:65px;margin-bottom:20px}
-p{font-size:32px;margin-bottom:25px}
+.nav button{width:100%;margin:10px 0;padding:16px;border-radius:14px;background:#181818;border:1px solid #444;color:#fff;font-size:28px;cursor:pointer;transition:.25s}
+.nav button:hover{transform:translateX(8px);border-color:#62cfff;box-shadow:0 0 20px #62cfff55}
+.nav .active{border-color:#62cfff;box-shadow:0 0 22px #62cfff}
+.content{margin-left:320px;padding:40px;height:100vh;overflow:auto}
+.page{display:none;opacity:0;transform:translateY(20px)}
+.page.active{display:block;animation:show .45s forwards}
+@keyframes show{to{opacity:1;transform:none}}
+h1{font-size:64px}.card{margin-top:20px;padding:20px;border-radius:18px;background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.08)}
+.cursor{position:fixed;width:300px;height:300px;border-radius:50%;background:#5cc8ff15;filter:blur(70px);pointer-events:none;transform:translate(-50%,-50%)}
+.ripple{position:absolute;border-radius:50%;background:rgba(92,200,255,.35);transform:scale(0);animation:r .6s linear}
+@keyframes r{to{transform:scale(10);opacity:0}}
 </style>
-</head>
-<body>
-<div class="sidebar">
-<div class="logo">Not Hidden<br>Inventory</div>
-<div class="nav">
-<button class="active" onclick="showPage('home',this)">Home</button>
-<button onclick="showPage('codes',this)">Codes</button>
-<button onclick="showPage('moves',this)">Movesets</button>
-<button onclick="showPage('animations',this)">Animations</button>
-<button onclick="showPage('contact',this)">Contact</button>
-</div>
-</div>
+</head><body>
+<canvas id="particles"></canvas><div class="cursor" id="c"></div>
+<div class="sidebar"><div class="logo">Not Hidden<br>Inventory</div><div class="nav">
+<button class="active" onclick="show('home',this)">Home</button>
+<button onclick="show('codes',this)">Codes</button>
+<button onclick="show('moves',this)">Movesets</button>
+<button onclick="show('animations',this)">Animations</button>
+<button onclick="show('contact',this)">Contact</button></div></div>
 <div class="content">
-<div id="home" class="page active"><h1>Home</h1><p>Thanks for using the site.</p><p>Check out the other tabs.</p><p>To use these moves for content, please credit me.</p><p>If you're using these moves for learning or personal projects, credit isn't required.</p></div>
-<div id="codes" class="page"><h1>Codes</h1><p>Working codes will appear here.</p></div>
-<div id="moves" class="page"><h1>Movesets</h1><p>All movesets go here.</p></div>
-<div id="animations" class="page"><h1>Animations</h1><p>Animation IDs go here.</p></div>
-<div id="contact" class="page"><h1>Contact</h1><p>Discord: YourName</p></div>
+<div id="home" class="page active"><h1>Home</h1><div class="card">Welcome to Hidden Inventory.</div></div>
+<div id="codes" class="page"><h1>Codes</h1><div class="card">Working codes.</div></div>
+<div id="moves" class="page"><h1>Movesets</h1><div class="card">Moves go here.</div></div>
+<div id="animations" class="page"><h1>Animations</h1><div class="card">Animation IDs.</div></div>
+<div id="contact" class="page"><h1>Contact</h1><div class="card">Discord: YourName</div></div>
 </div>
 <script>
-function showPage(id,btn){
-document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));
-document.getElementById(id).classList.add('active');
-document.querySelectorAll('.nav button').forEach(b=>b.classList.remove('active'));
-btn.classList.add('active');
-}
-document.addEventListener('mousemove',e=>{
-document.body.style.setProperty('--x',e.clientX+'px');
-document.body.style.setProperty('--y',e.clientY+'px');
-});
-</script>
-</body>
-</html>
+function show(id,b){document.querySelectorAll('.page').forEach(x=>x.classList.remove('active'));document.getElementById(id).classList.add('active');document.querySelectorAll('.nav button').forEach(x=>x.classList.remove('active'));b.classList.add('active')}
+document.addEventListener('mousemove',e=>{c.style.left=e.clientX+'px';c.style.top=e.clientY+'px';});
+document.querySelectorAll('button').forEach(btn=>btn.onclick=((old)=>function(e){let s=document.createElement('span');s.className='ripple';let r=this.getBoundingClientRect();s.style.left=(e.clientX-r.left)+'px';s.style.top=(e.clientY-r.top)+'px';this.style.position='relative';this.style.overflow='hidden';this.appendChild(s);setTimeout(()=>s.remove(),600);old.call(this,e)})(btn.onclick));
+const cv=document.getElementById('particles'),ctx=cv.getContext('2d');function rs(){cv.width=innerWidth;cv.height=innerHeight}rs();onresize=rs;let p=[...Array(60)].map(()=>({x:Math.random()*cv.width,y:Math.random()*cv.height,v:0.2+Math.random()}));function a(){ctx.clearRect(0,0,cv.width,cv.height);ctx.fillStyle='rgba(92,200,255,.5)';p.forEach(o=>{o.y-=o.v;if(o.y<0){o.y=cv.height;o.x=Math.random()*cv.width}ctx.beginPath();ctx.arc(o.x,o.y,1.5,0,7);ctx.fill();});requestAnimationFrame(a)}a();
+</script></body></html>
