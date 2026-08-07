@@ -1,49 +1,1201 @@
+```html
 <!DOCTYPE html>
 <html lang="en">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1.0">
-<title>Hidden Inventory V3</title>
+
+<title>Hidden Inventory V4</title>
+
 <link href="https://fonts.googleapis.com/css2?family=Patrick+Hand&display=swap" rel="stylesheet">
+
 <style>
-*{margin:0;padding:0;box-sizing:border-box;font-family:'Patrick Hand',cursive}
-html{scroll-behavior:smooth}
-body{background:linear-gradient(-45deg,#0d0d0d,#151515,#111827,#151515);background-size:400% 400%;animation:bg 18s ease infinite;color:#fff;overflow:hidden}
-@keyframes bg{0%,100%{background-position:0 50%}50%{background-position:100% 50%}}
-#particles{position:fixed;inset:0;pointer-events:none}
-.sidebar{position:fixed;left:20px;top:20px;bottom:20px;width:260px;background:rgba(20,20,20,.55);backdrop-filter:blur(16px);border:1px solid rgba(255,255,255,.08);border-radius:22px;padding:22px;box-shadow:0 0 30px rgba(0,0,0,.4)}
-.logo{font-size:42px;margin-bottom:30px;animation:float 4s ease-in-out infinite}
-@keyframes float{50%{transform:translateY(-8px)}}
-.nav button{width:100%;margin:10px 0;padding:16px;border-radius:14px;background:#181818;border:1px solid #444;color:#fff;font-size:28px;cursor:pointer;transition:.25s}
-.nav button:hover{transform:translateX(8px);border-color:#62cfff;box-shadow:0 0 20px #62cfff55}
-.nav .active{border-color:#62cfff;box-shadow:0 0 22px #62cfff}
-.content{margin-left:320px;padding:40px;height:100vh;overflow:auto}
-.page{display:none;opacity:0;transform:translateY(20px)}
-.page.active{display:block;animation:show .45s forwards}
-@keyframes show{to{opacity:1;transform:none}}
-h1{font-size:64px}.card{margin-top:20px;padding:20px;border-radius:18px;background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.08)}
-.cursor{position:fixed;width:300px;height:300px;border-radius:50%;background:#5cc8ff15;filter:blur(70px);pointer-events:none;transform:translate(-50%,-50%)}
-.ripple{position:absolute;border-radius:50%;background:rgba(92,200,255,.35);transform:scale(0);animation:r .6s linear}
-@keyframes r{to{transform:scale(10);opacity:0}}
+*{
+    margin:0;
+    padding:0;
+    box-sizing:border-box;
+    font-family:'Patrick Hand',cursive;
+}
+
+html{
+    scroll-behavior:smooth;
+}
+
+body{
+    min-height:100vh;
+    background:
+        radial-gradient(circle at 20% 20%,#172b3b55,transparent 30%),
+        radial-gradient(circle at 80% 80%,#15364a44,transparent 30%),
+        linear-gradient(-45deg,#080808,#111827,#0d1117,#151515);
+    background-size:400% 400%;
+    animation:bg 18s ease infinite;
+    color:#fff;
+    overflow:hidden;
+}
+
+@keyframes bg{
+    0%,100%{background-position:0 50%}
+    50%{background-position:100% 50%}
+}
+
+/* PARTICLES */
+
+#particles{
+    position:fixed;
+    inset:0;
+    width:100%;
+    height:100%;
+    pointer-events:none;
+    z-index:0;
+}
+
+/* CURSOR GLOW */
+
+.cursor{
+    position:fixed;
+    width:320px;
+    height:320px;
+    border-radius:50%;
+    background:#5cc8ff12;
+    filter:blur(70px);
+    pointer-events:none;
+    transform:translate(-50%,-50%);
+    z-index:1;
+}
+
+/* SIDEBAR */
+
+.sidebar{
+    position:fixed;
+    left:20px;
+    top:20px;
+    bottom:20px;
+    width:265px;
+    padding:22px;
+    background:rgba(15,15,18,.72);
+    backdrop-filter:blur(20px);
+    -webkit-backdrop-filter:blur(20px);
+    border:1px solid rgba(255,255,255,.09);
+    border-radius:24px;
+    box-shadow:
+        0 0 35px rgba(0,0,0,.5),
+        inset 0 0 30px rgba(255,255,255,.02);
+    z-index:10;
+    overflow:hidden;
+}
+
+.logo{
+    font-size:38px;
+    line-height:.9;
+    margin:5px 0 35px;
+    color:#fff;
+    text-shadow:0 0 20px #62cfff66;
+    animation:float 4s ease-in-out infinite;
+}
+
+.logo span{
+    color:#62cfff;
+}
+
+@keyframes float{
+    50%{
+        transform:translateY(-7px);
+    }
+}
+
+/* SEARCH */
+
+.search{
+    width:100%;
+    padding:13px 15px;
+    margin-bottom:18px;
+    border-radius:13px;
+    border:1px solid #ffffff18;
+    outline:none;
+    background:#0d0d0f;
+    color:white;
+    font-size:19px;
+    transition:.25s;
+}
+
+.search:focus{
+    border-color:#62cfff;
+    box-shadow:0 0 15px #62cfff22;
+}
+
+.search::placeholder{
+    color:#777;
+}
+
+/* NAVIGATION */
+
+.nav{
+    display:flex;
+    flex-direction:column;
+    gap:9px;
+}
+
+.nav button{
+    position:relative;
+    width:100%;
+    padding:14px 16px;
+    border-radius:14px;
+    background:#151619;
+    border:1px solid #ffffff12;
+    color:#ddd;
+    font-size:25px;
+    text-align:left;
+    cursor:pointer;
+    transition:.25s;
+    overflow:hidden;
+}
+
+.nav button:hover{
+    transform:translateX(7px);
+    color:#fff;
+    border-color:#62cfff;
+    box-shadow:0 0 20px #62cfff25;
+}
+
+.nav button.active{
+    color:#fff;
+    border-color:#62cfff;
+    background:linear-gradient(90deg,#62cfff18,#ffffff05);
+    box-shadow:
+        0 0 20px #62cfff22,
+        inset 3px 0 #62cfff;
+}
+
+/* SIDEBAR FOOTER */
+
+.sidebar-footer{
+    position:absolute;
+    bottom:20px;
+    left:22px;
+    right:22px;
+    color:#777;
+    font-size:15px;
+    text-align:center;
+}
+
+.status{
+    display:inline-flex;
+    align-items:center;
+    gap:7px;
+}
+
+.status-dot{
+    width:8px;
+    height:8px;
+    border-radius:50%;
+    background:#55ff91;
+    box-shadow:0 0 10px #55ff91;
+}
+
+/* CONTENT */
+
+.content{
+    position:relative;
+    margin-left:305px;
+    padding:45px;
+    height:100vh;
+    overflow:auto;
+    z-index:2;
+}
+
+.content::-webkit-scrollbar{
+    width:8px;
+}
+
+.content::-webkit-scrollbar-track{
+    background:transparent;
+}
+
+.content::-webkit-scrollbar-thumb{
+    background:#ffffff18;
+    border-radius:20px;
+}
+
+.content::-webkit-scrollbar-thumb:hover{
+    background:#62cfff55;
+}
+
+/* PAGES */
+
+.page{
+    display:none;
+    opacity:0;
+    transform:translateY(20px);
+    max-width:1200px;
+    padding-bottom:80px;
+}
+
+.page.active{
+    display:block;
+    animation:show .45s forwards;
+}
+
+@keyframes show{
+    to{
+        opacity:1;
+        transform:none;
+    }
+}
+
+/* HEADERS */
+
+.page-header{
+    margin-bottom:30px;
+}
+
+h1{
+    font-size:68px;
+    line-height:.9;
+    text-shadow:0 0 25px #62cfff25;
+}
+
+.subtitle{
+    margin-top:8px;
+    color:#888;
+    font-size:22px;
+}
+
+.blue{
+    color:#62cfff;
+}
+
+/* HERO */
+
+.hero{
+    position:relative;
+    padding:35px;
+    border-radius:24px;
+    background:
+        linear-gradient(135deg,#62cfff10,#ffffff04),
+        rgba(255,255,255,.035);
+    border:1px solid #ffffff10;
+    overflow:hidden;
+    box-shadow:0 20px 50px #0005;
+}
+
+.hero::before{
+    content:"";
+    position:absolute;
+    width:300px;
+    height:300px;
+    right:-100px;
+    top:-120px;
+    border-radius:50%;
+    background:#62cfff15;
+    filter:blur(30px);
+}
+
+.hero h2{
+    position:relative;
+    font-size:42px;
+}
+
+.hero p{
+    position:relative;
+    margin-top:10px;
+    color:#aaa;
+    font-size:21px;
+    max-width:700px;
+}
+
+/* STATS */
+
+.stats{
+    display:grid;
+    grid-template-columns:repeat(3,1fr);
+    gap:15px;
+    margin-top:20px;
+}
+
+.stat{
+    padding:22px;
+    border-radius:18px;
+    background:#ffffff06;
+    border:1px solid #ffffff0c;
+    transition:.25s;
+}
+
+.stat:hover{
+    transform:translateY(-5px);
+    border-color:#62cfff55;
+    box-shadow:0 10px 30px #0005;
+}
+
+.stat-number{
+    font-size:38px;
+    color:#62cfff;
+}
+
+.stat-label{
+    color:#888;
+    font-size:18px;
+}
+
+/* CARDS */
+
+.grid{
+    display:grid;
+    grid-template-columns:repeat(auto-fit,minmax(260px,1fr));
+    gap:18px;
+    margin-top:20px;
+}
+
+.card{
+    position:relative;
+    padding:23px;
+    border-radius:19px;
+    background:rgba(255,255,255,.045);
+    border:1px solid rgba(255,255,255,.08);
+    transition:.3s;
+    overflow:hidden;
+}
+
+.card:hover{
+    transform:translateY(-6px);
+    border-color:#62cfff66;
+    box-shadow:0 15px 35px #0005;
+}
+
+.card h3{
+    font-size:30px;
+    margin-bottom:5px;
+}
+
+.card p{
+    color:#999;
+    font-size:18px;
+}
+
+.tag{
+    display:inline-block;
+    margin-top:13px;
+    padding:5px 10px;
+    border-radius:8px;
+    background:#62cfff14;
+    border:1px solid #62cfff33;
+    color:#62cfff;
+    font-size:15px;
+}
+
+/* CODE CARDS */
+
+.code{
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    gap:15px;
+}
+
+.code-name{
+    font-size:27px;
+}
+
+.code-value{
+    margin-top:3px;
+    color:#62cfff;
+    font-size:21px;
+}
+
+.copy{
+    flex-shrink:0;
+    padding:9px 15px;
+    border-radius:10px;
+    border:1px solid #62cfff44;
+    background:#62cfff12;
+    color:#fff;
+    cursor:pointer;
+    font-size:18px;
+    transition:.2s;
+}
+
+.copy:hover{
+    background:#62cfff25;
+    box-shadow:0 0 15px #62cfff22;
+}
+
+/* MOVE / ANIMATION ENTRIES */
+
+.entry{
+    padding:20px;
+}
+
+.entry-top{
+    display:flex;
+    justify-content:space-between;
+    gap:15px;
+    align-items:center;
+}
+
+.entry h3{
+    font-size:31px;
+}
+
+.key{
+    padding:4px 10px;
+    border-radius:7px;
+    background:#0008;
+    border:1px solid #ffffff15;
+    color:#62cfff;
+    font-size:18px;
+}
+
+.entry p{
+    margin-top:8px;
+}
+
+/* CONTACT */
+
+.contact-box{
+    padding:30px;
+    text-align:center;
+}
+
+.contact-box h2{
+    font-size:42px;
+}
+
+.contact-box p{
+    margin:10px auto 20px;
+    color:#999;
+    font-size:21px;
+}
+
+.discord{
+    display:inline-block;
+    padding:13px 25px;
+    border-radius:13px;
+    background:#62cfff15;
+    border:1px solid #62cfff55;
+    color:#fff;
+    font-size:23px;
+}
+
+/* RIPPLE */
+
+.ripple{
+    position:absolute;
+    width:20px;
+    height:20px;
+    border-radius:50%;
+    background:rgba(92,200,255,.35);
+    transform:translate(-50%,-50%) scale(0);
+    animation:r .6s linear;
+    pointer-events:none;
+}
+
+@keyframes r{
+    to{
+        transform:translate(-50%,-50%) scale(12);
+        opacity:0;
+    }
+}
+
+/* TOAST */
+
+.toast{
+    position:fixed;
+    right:30px;
+    bottom:30px;
+    padding:14px 20px;
+    border-radius:12px;
+    background:#15171b;
+    border:1px solid #62cfff55;
+    box-shadow:0 10px 30px #0008;
+    transform:translateY(100px);
+    opacity:0;
+    transition:.3s;
+    z-index:100;
+    font-size:18px;
+}
+
+.toast.show{
+    transform:translateY(0);
+    opacity:1;
+}
+
+/* MOBILE */
+
+@media(max-width:850px){
+
+    body{
+        overflow:auto;
+    }
+
+    .sidebar{
+        position:relative;
+        left:0;
+        top:0;
+        bottom:auto;
+        width:calc(100% - 20px);
+        margin:10px;
+        height:auto;
+    }
+
+    .sidebar-footer{
+        display:none;
+    }
+
+    .logo{
+        margin-bottom:20px;
+    }
+
+    .nav{
+        display:grid;
+        grid-template-columns:repeat(2,1fr);
+    }
+
+    .nav button{
+        font-size:20px;
+    }
+
+    .content{
+        margin-left:0;
+        padding:25px 15px;
+        height:auto;
+        overflow:visible;
+    }
+
+    h1{
+        font-size:50px;
+    }
+
+    .stats{
+        grid-template-columns:1fr;
+    }
+
+    .code{
+        align-items:flex-start;
+    }
+}
+
+@media(max-width:500px){
+
+    .nav{
+        grid-template-columns:1fr;
+    }
+
+    .hero{
+        padding:25px;
+    }
+
+    .hero h2{
+        font-size:34px;
+    }
+
+    h1{
+        font-size:44px;
+    }
+}
 </style>
-</head><body>
-<canvas id="particles"></canvas><div class="cursor" id="c"></div>
-<div class="sidebar"><div class="logo">Not Hidden<br>Inventory</div><div class="nav">
-<button class="active" onclick="show('home',this)">Home</button>
-<button onclick="show('codes',this)">Codes</button>
-<button onclick="show('moves',this)">Movesets</button>
-<button onclick="show('animations',this)">Animations</button>
-<button onclick="show('contact',this)">Contact</button></div></div>
-<div class="content">
-<div id="home" class="page active"><h1>Home</h1><div class="card">Welcome to Hidden Inventory.</div></div>
-<div id="codes" class="page"><h1>Codes</h1><div class="card">Working codes.</div></div>
-<div id="moves" class="page"><h1>Movesets</h1><div class="card">Moves go here.</div></div>
-<div id="animations" class="page"><h1>Animations</h1><div class="card">Animation IDs.</div></div>
-<div id="contact" class="page"><h1>Contact</h1><div class="card">Discord: YourName</div></div>
+</head>
+
+<body>
+
+<canvas id="particles"></canvas>
+<div class="cursor" id="cursor"></div>
+
+<!-- SIDEBAR -->
+
+<aside class="sidebar">
+
+    <div class="logo">
+        Not Hidden<br>
+        <span>Inventory</span>
+    </div>
+
+    <input
+        class="search"
+        id="search"
+        type="text"
+        placeholder="Search..."
+        autocomplete="off"
+    >
+
+    <nav class="nav">
+
+        <button class="active" onclick="showPage('home',this)">
+            🏠 Home
+        </button>
+
+        <button onclick="showPage('codes',this)">
+            🔑 Codes
+        </button>
+
+        <button onclick="showPage('moves',this)">
+            ⚔️ Movesets
+        </button>
+
+        <button onclick="showPage('animations',this)">
+            🎞️ Animations
+        </button>
+
+        <button onclick="showPage('contact',this)">
+            💬 Contact
+        </button>
+
+    </nav>
+
+    <div class="sidebar-footer">
+        <span class="status">
+            <span class="status-dot"></span>
+            Inventory Online
+        </span>
+        <br>
+        V4.0
+    </div>
+
+</aside>
+
+<!-- MAIN CONTENT -->
+
+<main class="content">
+
+    <!-- HOME -->
+
+    <section id="home" class="page active">
+
+        <div class="page-header">
+            <h1>Home</h1>
+            <div class="subtitle">
+                Welcome to the <span class="blue">Hidden Inventory</span> wiki.
+            </div>
+        </div>
+
+        <div class="hero">
+
+            <h2>Hidden Inventory V4</h2>
+
+            <p>
+                A community-made database for codes, movesets,
+                animations and other useful information.
+            </p>
+
+        </div>
+
+        <div class="stats">
+
+            <div class="stat">
+                <div class="stat-number">4</div>
+                <div class="stat-label">Current Version</div>
+            </div>
+
+            <div class="stat">
+                <div class="stat-number">∞</div>
+                <div class="stat-label">Things To Discover</div>
+            </div>
+
+            <div class="stat">
+                <div class="stat-number">LIVE</div>
+                <div class="stat-label">Inventory Status</div>
+            </div>
+
+        </div>
+
+        <div class="grid">
+
+            <div class="card">
+                <h3>🔑 Codes</h3>
+                <p>
+                    Find the latest working codes and rewards.
+                </p>
+                <span class="tag">Updated</span>
+            </div>
+
+            <div class="card">
+                <h3>⚔️ Movesets</h3>
+                <p>
+                    Browse moves, combos and character information.
+                </p>
+                <span class="tag">Database</span>
+            </div>
+
+            <div class="card">
+                <h3>🎞️ Animations</h3>
+                <p>
+                    Keep track of useful animation IDs.
+                </p>
+                <span class="tag">IDs</span>
+            </div>
+
+        </div>
+
+    </section>
+
+
+    <!-- CODES -->
+
+    <section id="codes" class="page">
+
+        <div class="page-header">
+            <h1>Codes</h1>
+            <div class="subtitle">
+                Currently available codes.
+            </div>
+        </div>
+
+        <div class="grid">
+
+            <div class="card code">
+                <div>
+                    <div class="code-name">WELCOME</div>
+                    <div class="code-value">Reward: Free Items</div>
+                </div>
+                <button class="copy" onclick="copyCode('WELCOME')">
+                    Copy
+                </button>
+            </div>
+
+            <div class="card code">
+                <div>
+                    <div class="code-name">UPDATE1</div>
+                    <div class="code-value">Reward: Unknown</div>
+                </div>
+                <button class="copy" onclick="copyCode('UPDATE1')">
+                    Copy
+                </button>
+            </div>
+
+            <div class="card code">
+                <div>
+                    <div class="code-name">INVENTORY</div>
+                    <div class="code-value">Reward: Unknown</div>
+                </div>
+                <button class="copy" onclick="copyCode('INVENTORY')">
+                    Copy
+                </button>
+            </div>
+
+        </div>
+
+    </section>
+
+
+    <!-- MOVESETS -->
+
+    <section id="moves" class="page">
+
+        <div class="page-header">
+            <h1>Movesets</h1>
+            <div class="subtitle">
+                Character moves and useful information.
+            </div>
+        </div>
+
+        <div class="grid">
+
+            <div class="card entry">
+
+                <div class="entry-top">
+                    <h3>Move 1</h3>
+                    <span class="key">1</span>
+                </div>
+
+                <p>
+                    Description of the first move.
+                </p>
+
+                <span class="tag">Normal</span>
+
+            </div>
+
+            <div class="card entry">
+
+                <div class="entry-top">
+                    <h3>Move 2</h3>
+                    <span class="key">2</span>
+                </div>
+
+                <p>
+                    Description of the second move.
+                </p>
+
+                <span class="tag">Normal</span>
+
+            </div>
+
+            <div class="card entry">
+
+                <div class="entry-top">
+                    <h3>Move 3</h3>
+                    <span class="key">3</span>
+                </div>
+
+                <p>
+                    Description of the third move.
+                </p>
+
+                <span class="tag">Normal</span>
+
+            </div>
+
+            <div class="card entry">
+
+                <div class="entry-top">
+                    <h3>Ultimate</h3>
+                    <span class="key">4</span>
+                </div>
+
+                <p>
+                    Powerful ultimate ability.
+                </p>
+
+                <span class="tag">Ultimate</span>
+
+            </div>
+
+        </div>
+
+    </section>
+
+
+    <!-- ANIMATIONS -->
+
+    <section id="animations" class="page">
+
+        <div class="page-header">
+            <h1>Animations</h1>
+            <div class="subtitle">
+                Animation IDs and references.
+            </div>
+        </div>
+
+        <div class="grid">
+
+            <div class="card entry">
+
+                <div class="entry-top">
+                    <h3>Idle</h3>
+                    <span class="key">ID</span>
+                </div>
+
+                <p>
+                    Animation ID:
+                    <span class="blue">0000000000</span>
+                </p>
+
+                <span class="tag">Idle</span>
+
+            </div>
+
+            <div class="card entry">
+
+                <div class="entry-top">
+                    <h3>Attack</h3>
+                    <span class="key">ID</span>
+                </div>
+
+                <p>
+                    Animation ID:
+                    <span class="blue">0000000000</span>
+                </p>
+
+                <span class="tag">Combat</span>
+
+            </div>
+
+            <div class="card entry">
+
+                <div class="entry-top">
+                    <h3>Ultimate</h3>
+                    <span class="key">ID</span>
+                </div>
+
+                <p>
+                    Animation ID:
+                    <span class="blue">0000000000</span>
+                </p>
+
+                <span class="tag">Ultimate</span>
+
+            </div>
+
+        </div>
+
+    </section>
+
+
+    <!-- CONTACT -->
+
+    <section id="contact" class="page">
+
+        <div class="page-header">
+            <h1>Contact</h1>
+            <div class="subtitle">
+                Need help or want to contribute?
+            </div>
+        </div>
+
+        <div class="card contact-box">
+
+            <h2>Join the community</h2>
+
+            <p>
+                Report incorrect information, suggest additions,
+                or contact the developers.
+            </p>
+
+            <div class="discord">
+                Discord: YourName
+            </div>
+
+        </div>
+
+    </section>
+
+</main>
+
+<div class="toast" id="toast">
+    Copied!
 </div>
+
 <script>
-function show(id,b){document.querySelectorAll('.page').forEach(x=>x.classList.remove('active'));document.getElementById(id).classList.add('active');document.querySelectorAll('.nav button').forEach(x=>x.classList.remove('active'));b.classList.add('active')}
-document.addEventListener('mousemove',e=>{c.style.left=e.clientX+'px';c.style.top=e.clientY+'px';});
-document.querySelectorAll('button').forEach(btn=>btn.onclick=((old)=>function(e){let s=document.createElement('span');s.className='ripple';let r=this.getBoundingClientRect();s.style.left=(e.clientX-r.left)+'px';s.style.top=(e.clientY-r.top)+'px';this.style.position='relative';this.style.overflow='hidden';this.appendChild(s);setTimeout(()=>s.remove(),600);old.call(this,e)})(btn.onclick));
-const cv=document.getElementById('particles'),ctx=cv.getContext('2d');function rs(){cv.width=innerWidth;cv.height=innerHeight}rs();onresize=rs;let p=[...Array(60)].map(()=>({x:Math.random()*cv.width,y:Math.random()*cv.height,v:0.2+Math.random()}));function a(){ctx.clearRect(0,0,cv.width,cv.height);ctx.fillStyle='rgba(92,200,255,.5)';p.forEach(o=>{o.y-=o.v;if(o.y<0){o.y=cv.height;o.x=Math.random()*cv.width}ctx.beginPath();ctx.arc(o.x,o.y,1.5,0,7);ctx.fill();});requestAnimationFrame(a)}a();
-</script></body></html>
+
+/* PAGE NAVIGATION */
+
+function showPage(id,button){
+
+    document.querySelectorAll('.page').forEach(page=>{
+        page.classList.remove('active');
+    });
+
+    const target=document.getElementById(id);
+
+    if(target){
+        target.classList.add('active');
+    }
+
+    document.querySelectorAll('.nav button').forEach(btn=>{
+        btn.classList.remove('active');
+    });
+
+    if(button){
+        button.classList.add('active');
+    }
+
+    document.querySelector('.content').scrollTop=0;
+}
+
+
+/* SEARCH */
+
+const search=document.getElementById('search');
+
+search.addEventListener('input',function(){
+
+    const query=this.value.toLowerCase().trim();
+
+    document.querySelectorAll('.card').forEach(card=>{
+
+        const text=card.innerText.toLowerCase();
+
+        if(!query || text.includes(query)){
+            card.style.display='';
+        }else{
+            card.style.display='none';
+        }
+
+    });
+
+});
+
+
+/* COPY CODE */
+
+function copyCode(code){
+
+    navigator.clipboard.writeText(code)
+        .then(()=>{
+            showToast('Copied: '+code);
+        })
+        .catch(()=>{
+            showToast('Copy failed');
+        });
+
+}
+
+
+/* TOAST */
+
+let toastTimer;
+
+function showToast(message){
+
+    const toast=document.getElementById('toast');
+
+    toast.textContent=message;
+    toast.classList.add('show');
+
+    clearTimeout(toastTimer);
+
+    toastTimer=setTimeout(()=>{
+        toast.classList.remove('show');
+    },1800);
+
+}
+
+
+/* CURSOR GLOW */
+
+const cursor=document.getElementById('cursor');
+
+document.addEventListener('mousemove',event=>{
+
+    cursor.style.left=event.clientX+'px';
+    cursor.style.top=event.clientY+'px';
+
+});
+
+
+/* BUTTON RIPPLE */
+
+document.addEventListener('click',event=>{
+
+    const button=event.target.closest('button');
+
+    if(!button) return;
+
+    const ripple=document.createElement('span');
+
+    ripple.className='ripple';
+
+    const rect=button.getBoundingClientRect();
+
+    ripple.style.left=(event.clientX-rect.left)+'px';
+    ripple.style.top=(event.clientY-rect.top)+'px';
+
+    button.appendChild(ripple);
+
+    setTimeout(()=>{
+        ripple.remove();
+    },600);
+
+});
+
+
+/* PARTICLES */
+
+const canvas=document.getElementById('particles');
+const ctx=canvas.getContext('2d');
+
+let particles=[];
+
+function resizeCanvas(){
+
+    canvas.width=window.innerWidth;
+    canvas.height=window.innerHeight;
+
+}
+
+function createParticles(){
+
+    particles=[];
+
+    for(let i=0;i<70;i++){
+
+        particles.push({
+
+            x:Math.random()*canvas.width,
+
+            y:Math.random()*canvas.height,
+
+            size:Math.random()*2+0.5,
+
+            speed:Math.random()*0.7+0.2,
+
+            opacity:Math.random()*0.5+0.1
+
+        });
+
+    }
+
+}
+
+function animateParticles(){
+
+    ctx.clearRect(
+        0,
+        0,
+        canvas.width,
+        canvas.height
+    );
+
+    particles.forEach(p=>{
+
+        p.y-=p.speed;
+
+        if(p.y<0){
+
+            p.y=canvas.height;
+            p.x=Math.random()*canvas.width;
+
+        }
+
+        ctx.beginPath();
+
+        ctx.arc(
+            p.x,
+            p.y,
+            p.size,
+            0,
+            Math.PI*2
+        );
+
+        ctx.fillStyle=
+            `rgba(92,200,255,${p.opacity})`;
+
+        ctx.fill();
+
+    });
+
+    requestAnimationFrame(animateParticles);
+
+}
+
+resizeCanvas();
+createParticles();
+animateParticles();
+
+window.addEventListener('resize',()=>{
+
+    resizeCanvas();
+    createParticles();
+
+});
+
+
+/* KEYBOARD NAVIGATION */
+
+document.addEventListener('keydown',event=>{
+
+    if(event.key==='1'){
+        document.querySelector('.nav button:nth-child(1)').click();
+    }
+
+    if(event.key==='2'){
+        document.querySelector('.nav button:nth-child(2)').click();
+    }
+
+    if(event.key==='3'){
+        document.querySelector('.nav button:nth-child(3)').click();
+    }
+
+    if(event.key==='4'){
+        document.querySelector('.nav button:nth-child(4)').click();
+    }
+
+    if(event.key==='5'){
+        document.querySelector('.nav button:nth-child(5)').click();
+    }
+
+});
+
+</script>
+
+</body>
+</html>
+```
