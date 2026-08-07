@@ -1,596 +1,297 @@
-```html
 <!DOCTYPE html>
 <html lang="en">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1.0">
-
-<title>Hidden Inventory V4</title>
-
+<title>Hidden Inventory V5</title>
 <link href="https://fonts.googleapis.com/css2?family=Patrick+Hand&display=swap" rel="stylesheet">
 
 <style>
-*{
-    margin:0;
-    padding:0;
-    box-sizing:border-box;
-    font-family:'Patrick Hand',cursive;
-}
-
-html{
-    scroll-behavior:smooth;
-}
-
+*{margin:0;padding:0;box-sizing:border-box;font-family:'Patrick Hand',cursive}
+html{scroll-behavior:smooth}
 body{
     min-height:100vh;
     background:
-        radial-gradient(circle at 20% 20%,#172b3b55,transparent 30%),
-        radial-gradient(circle at 80% 80%,#15364a44,transparent 30%),
-        linear-gradient(-45deg,#080808,#111827,#0d1117,#151515);
+        radial-gradient(circle at 15% 20%,#17354a55,transparent 30%),
+        radial-gradient(circle at 85% 80%,#16384d44,transparent 30%),
+        linear-gradient(-45deg,#07090b,#0d1720,#0b1016,#11151b);
     background-size:400% 400%;
     animation:bg 18s ease infinite;
     color:#fff;
-    overflow:hidden;
+    overflow:hidden
 }
+@keyframes bg{0%,100%{background-position:0 50%}50%{background-position:100% 50%}}
 
-@keyframes bg{
-    0%,100%{background-position:0 50%}
-    50%{background-position:100% 50%}
-}
-
-/* PARTICLES */
-
-#particles{
-    position:fixed;
-    inset:0;
-    width:100%;
-    height:100%;
-    pointer-events:none;
-    z-index:0;
-}
-
-/* CURSOR GLOW */
-
+#particles{position:fixed;inset:0;width:100%;height:100%;pointer-events:none;z-index:0}
 .cursor{
-    position:fixed;
-    width:320px;
-    height:320px;
-    border-radius:50%;
-    background:#5cc8ff12;
-    filter:blur(70px);
-    pointer-events:none;
-    transform:translate(-50%,-50%);
-    z-index:1;
+    position:fixed;width:340px;height:340px;border-radius:50%;
+    background:#62cfff13;filter:blur(75px);pointer-events:none;
+    transform:translate(-50%,-50%);z-index:1
 }
-
-/* SIDEBAR */
 
 .sidebar{
-    position:fixed;
-    left:20px;
-    top:20px;
-    bottom:20px;
-    width:265px;
-    padding:22px;
-    background:rgba(15,15,18,.72);
-    backdrop-filter:blur(20px);
-    -webkit-backdrop-filter:blur(20px);
-    border:1px solid rgba(255,255,255,.09);
-    border-radius:24px;
-    box-shadow:
-        0 0 35px rgba(0,0,0,.5),
-        inset 0 0 30px rgba(255,255,255,.02);
-    z-index:10;
-    overflow:hidden;
+    position:fixed;left:18px;top:18px;bottom:18px;width:270px;
+    padding:22px;background:rgba(10,13,17,.78);
+    backdrop-filter:blur(22px);-webkit-backdrop-filter:blur(22px);
+    border:1px solid #ffffff12;border-radius:25px;
+    box-shadow:0 0 40px #0008,inset 0 0 30px #ffffff03;
+    z-index:10;overflow:hidden
 }
-
 .logo{
-    font-size:38px;
-    line-height:.9;
-    margin:5px 0 35px;
-    color:#fff;
-    text-shadow:0 0 20px #62cfff66;
-    animation:float 4s ease-in-out infinite;
+    font-size:39px;line-height:.9;margin:4px 0 28px;
+    text-shadow:0 0 22px #62cfff55;animation:float 4s ease-in-out infinite
 }
+.logo span{color:#62cfff}
+@keyframes float{50%{transform:translateY(-7px)}}
 
-.logo span{
-    color:#62cfff;
-}
-
-@keyframes float{
-    50%{
-        transform:translateY(-7px);
-    }
-}
-
-/* SEARCH */
-
+.search-wrap{position:relative;margin-bottom:17px}
 .search{
-    width:100%;
-    padding:13px 15px;
-    margin-bottom:18px;
-    border-radius:13px;
-    border:1px solid #ffffff18;
-    outline:none;
-    background:#0d0d0f;
-    color:white;
-    font-size:19px;
-    transition:.25s;
+    width:100%;padding:13px 40px 13px 15px;border-radius:13px;
+    border:1px solid #ffffff14;outline:none;background:#080a0d;
+    color:#fff;font-size:19px;transition:.25s
 }
+.search:focus{border-color:#62cfff;box-shadow:0 0 17px #62cfff22}
+.search::placeholder{color:#666}
+.search-icon{position:absolute;right:13px;top:10px;color:#666;font-size:20px}
 
-.search:focus{
-    border-color:#62cfff;
-    box-shadow:0 0 15px #62cfff22;
-}
-
-.search::placeholder{
-    color:#777;
-}
-
-/* NAVIGATION */
-
-.nav{
-    display:flex;
-    flex-direction:column;
-    gap:9px;
-}
-
+.nav{display:flex;flex-direction:column;gap:8px}
 .nav button{
-    position:relative;
-    width:100%;
-    padding:14px 16px;
-    border-radius:14px;
-    background:#151619;
-    border:1px solid #ffffff12;
-    color:#ddd;
-    font-size:25px;
-    text-align:left;
-    cursor:pointer;
-    transition:.25s;
-    overflow:hidden;
+    position:relative;width:100%;padding:13px 15px;border-radius:14px;
+    background:#111419;border:1px solid #ffffff10;color:#aaa;
+    font-size:24px;text-align:left;cursor:pointer;transition:.25s;overflow:hidden
 }
-
 .nav button:hover{
-    transform:translateX(7px);
-    color:#fff;
-    border-color:#62cfff;
-    box-shadow:0 0 20px #62cfff25;
+    transform:translateX(7px);color:#fff;border-color:#62cfff66;
+    box-shadow:0 0 22px #62cfff20
 }
-
 .nav button.active{
-    color:#fff;
-    border-color:#62cfff;
-    background:linear-gradient(90deg,#62cfff18,#ffffff05);
-    box-shadow:
-        0 0 20px #62cfff22,
-        inset 3px 0 #62cfff;
+    color:#fff;border-color:#62cfff88;
+    background:linear-gradient(90deg,#62cfff18,#ffffff03);
+    box-shadow:0 0 22px #62cfff22,inset 3px 0 #62cfff
 }
-
-/* SIDEBAR FOOTER */
-
+.nav-key{
+    float:right;color:#555;font-size:15px;margin-top:5px
+}
 .sidebar-footer{
-    position:absolute;
-    bottom:20px;
-    left:22px;
-    right:22px;
-    color:#777;
-    font-size:15px;
-    text-align:center;
+    position:absolute;bottom:19px;left:22px;right:22px;
+    color:#666;font-size:15px;text-align:center
 }
-
-.status{
-    display:inline-flex;
-    align-items:center;
-    gap:7px;
-}
-
+.status{display:inline-flex;align-items:center;gap:7px}
 .status-dot{
-    width:8px;
-    height:8px;
-    border-radius:50%;
-    background:#55ff91;
-    box-shadow:0 0 10px #55ff91;
+    width:8px;height:8px;border-radius:50%;background:#55ff91;
+    box-shadow:0 0 11px #55ff91
 }
-
-/* CONTENT */
 
 .content{
-    position:relative;
-    margin-left:305px;
-    padding:45px;
-    height:100vh;
-    overflow:auto;
-    z-index:2;
+    position:relative;margin-left:305px;padding:42px 45px;
+    height:100vh;overflow:auto;z-index:2
 }
+.content::-webkit-scrollbar{width:8px}
+.content::-webkit-scrollbar-track{background:transparent}
+.content::-webkit-scrollbar-thumb{background:#ffffff15;border-radius:20px}
+.content::-webkit-scrollbar-thumb:hover{background:#62cfff55}
 
-.content::-webkit-scrollbar{
-    width:8px;
+.page{display:none;opacity:0;transform:translateY(18px);max-width:1250px;padding-bottom:80px}
+.page.active{display:block;animation:show .42s forwards}
+@keyframes show{to{opacity:1;transform:none}}
+
+.page-header{display:flex;justify-content:space-between;align-items:end;gap:20px;margin-bottom:27px}
+h1{font-size:68px;line-height:.9;text-shadow:0 0 28px #62cfff22}
+.subtitle{margin-top:8px;color:#777;font-size:21px}
+.blue{color:#62cfff}
+.header-version{
+    padding:8px 13px;border:1px solid #62cfff44;border-radius:10px;
+    color:#62cfff;background:#62cfff0c;font-size:17px
 }
-
-.content::-webkit-scrollbar-track{
-    background:transparent;
-}
-
-.content::-webkit-scrollbar-thumb{
-    background:#ffffff18;
-    border-radius:20px;
-}
-
-.content::-webkit-scrollbar-thumb:hover{
-    background:#62cfff55;
-}
-
-/* PAGES */
-
-.page{
-    display:none;
-    opacity:0;
-    transform:translateY(20px);
-    max-width:1200px;
-    padding-bottom:80px;
-}
-
-.page.active{
-    display:block;
-    animation:show .45s forwards;
-}
-
-@keyframes show{
-    to{
-        opacity:1;
-        transform:none;
-    }
-}
-
-/* HEADERS */
-
-.page-header{
-    margin-bottom:30px;
-}
-
-h1{
-    font-size:68px;
-    line-height:.9;
-    text-shadow:0 0 25px #62cfff25;
-}
-
-.subtitle{
-    margin-top:8px;
-    color:#888;
-    font-size:22px;
-}
-
-.blue{
-    color:#62cfff;
-}
-
-/* HERO */
 
 .hero{
-    position:relative;
-    padding:35px;
-    border-radius:24px;
-    background:
-        linear-gradient(135deg,#62cfff10,#ffffff04),
-        rgba(255,255,255,.035);
-    border:1px solid #ffffff10;
-    overflow:hidden;
-    box-shadow:0 20px 50px #0005;
+    position:relative;padding:38px;border-radius:25px;
+    background:linear-gradient(135deg,#62cfff10,#ffffff03),rgba(255,255,255,.035);
+    border:1px solid #ffffff10;overflow:hidden;box-shadow:0 20px 55px #0006
 }
-
-.hero::before{
-    content:"";
-    position:absolute;
-    width:300px;
-    height:300px;
-    right:-100px;
-    top:-120px;
-    border-radius:50%;
-    background:#62cfff15;
-    filter:blur(30px);
+.hero:before{
+    content:"";position:absolute;width:360px;height:360px;right:-140px;top:-150px;
+    border-radius:50%;background:#62cfff14;filter:blur(28px)
 }
-
-.hero h2{
-    position:relative;
-    font-size:42px;
+.hero h2,.hero p,.hero-actions{position:relative}
+.hero h2{font-size:45px}
+.hero p{margin-top:9px;color:#999;font-size:21px;max-width:750px}
+.hero-actions{display:flex;gap:10px;margin-top:22px;flex-wrap:wrap}
+.primary-btn,.secondary-btn{
+    padding:11px 18px;border-radius:12px;font-size:19px;cursor:pointer;transition:.22s
 }
+.primary-btn{border:1px solid #62cfff66;background:#62cfff17;color:#fff}
+.secondary-btn{border:1px solid #ffffff18;background:#ffffff07;color:#aaa}
+.primary-btn:hover,.secondary-btn:hover{transform:translateY(-3px);box-shadow:0 8px 22px #0005}
+.primary-btn:hover{border-color:#62cfff}
 
-.hero p{
-    position:relative;
-    margin-top:10px;
-    color:#aaa;
-    font-size:21px;
-    max-width:700px;
-}
-
-/* STATS */
-
-.stats{
-    display:grid;
-    grid-template-columns:repeat(3,1fr);
-    gap:15px;
-    margin-top:20px;
-}
-
+.stats{display:grid;grid-template-columns:repeat(4,1fr);gap:14px;margin-top:19px}
 .stat{
-    padding:22px;
-    border-radius:18px;
-    background:#ffffff06;
-    border:1px solid #ffffff0c;
-    transition:.25s;
+    padding:19px;border-radius:17px;background:#ffffff05;
+    border:1px solid #ffffff0c;transition:.25s
 }
+.stat:hover{transform:translateY(-4px);border-color:#62cfff44}
+.stat-number{font-size:34px;color:#62cfff}
+.stat-label{color:#777;font-size:17px}
 
-.stat:hover{
-    transform:translateY(-5px);
-    border-color:#62cfff55;
-    box-shadow:0 10px 30px #0005;
-}
+.section-title{font-size:34px;margin:28px 0 12px}
 
-.stat-number{
-    font-size:38px;
-    color:#62cfff;
-}
-
-.stat-label{
-    color:#888;
-    font-size:18px;
-}
-
-/* CARDS */
-
-.grid{
-    display:grid;
-    grid-template-columns:repeat(auto-fit,minmax(260px,1fr));
-    gap:18px;
-    margin-top:20px;
-}
-
+.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:17px}
 .card{
-    position:relative;
-    padding:23px;
-    border-radius:19px;
-    background:rgba(255,255,255,.045);
-    border:1px solid rgba(255,255,255,.08);
-    transition:.3s;
-    overflow:hidden;
+    position:relative;padding:22px;border-radius:19px;background:#ffffff05;
+    border:1px solid #ffffff0d;transition:.28s;overflow:hidden
 }
-
 .card:hover{
-    transform:translateY(-6px);
-    border-color:#62cfff66;
-    box-shadow:0 15px 35px #0005;
+    transform:translateY(-5px);border-color:#62cfff55;
+    box-shadow:0 15px 35px #0006
 }
-
-.card h3{
-    font-size:30px;
-    margin-bottom:5px;
-}
-
-.card p{
-    color:#999;
-    font-size:18px;
-}
-
+.card h3{font-size:29px;margin-bottom:5px}
+.card p{color:#888;font-size:18px;line-height:1.25}
 .tag{
-    display:inline-block;
-    margin-top:13px;
-    padding:5px 10px;
-    border-radius:8px;
-    background:#62cfff14;
-    border:1px solid #62cfff33;
-    color:#62cfff;
-    font-size:15px;
+    display:inline-block;margin-top:13px;padding:5px 10px;border-radius:8px;
+    background:#62cfff12;border:1px solid #62cfff30;color:#62cfff;font-size:15px
 }
-
-/* CODE CARDS */
+.tag.green{color:#61ff9b;border-color:#61ff9b33;background:#61ff9b0b}
+.tag.red{color:#ff6c6c;border-color:#ff6c6c33;background:#ff6c6c0b}
 
 .code{
-    display:flex;
-    justify-content:space-between;
-    align-items:center;
-    gap:15px;
+    display:flex;justify-content:space-between;align-items:center;gap:15px
 }
-
-.code-name{
-    font-size:27px;
-}
-
-.code-value{
-    margin-top:3px;
-    color:#62cfff;
-    font-size:21px;
-}
-
+.code-name{font-size:28px}
+.code-value{margin-top:2px;color:#62cfff;font-size:19px}
 .copy{
-    flex-shrink:0;
-    padding:9px 15px;
-    border-radius:10px;
-    border:1px solid #62cfff44;
-    background:#62cfff12;
-    color:#fff;
-    cursor:pointer;
-    font-size:18px;
-    transition:.2s;
+    flex-shrink:0;padding:9px 14px;border-radius:10px;border:1px solid #62cfff44;
+    background:#62cfff10;color:#fff;cursor:pointer;font-size:17px;transition:.2s
 }
+.copy:hover{background:#62cfff22;box-shadow:0 0 15px #62cfff22}
 
-.copy:hover{
-    background:#62cfff25;
-    box-shadow:0 0 15px #62cfff22;
-}
-
-/* MOVE / ANIMATION ENTRIES */
-
-.entry{
-    padding:20px;
-}
-
-.entry-top{
-    display:flex;
-    justify-content:space-between;
-    gap:15px;
-    align-items:center;
-}
-
-.entry h3{
-    font-size:31px;
-}
-
+.entry{padding:20px}
+.entry-top{display:flex;justify-content:space-between;gap:15px;align-items:center}
+.entry h3{font-size:30px}
 .key{
-    padding:4px 10px;
-    border-radius:7px;
-    background:#0008;
-    border:1px solid #ffffff15;
-    color:#62cfff;
-    font-size:18px;
+    padding:4px 10px;border-radius:7px;background:#0009;
+    border:1px solid #ffffff15;color:#62cfff;font-size:17px
 }
 
-.entry p{
-    margin-top:8px;
+.filters{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:18px}
+.filter{
+    padding:8px 13px;border-radius:10px;border:1px solid #ffffff12;
+    background:#ffffff06;color:#888;font-size:17px;cursor:pointer;transition:.2s
+}
+.filter.active,.filter:hover{color:#fff;border-color:#62cfff55;background:#62cfff0e}
+
+.notice{
+    margin-bottom:18px;padding:15px 18px;border-radius:14px;
+    border:1px solid #62cfff2c;background:#62cfff09;color:#aaa;font-size:18px
 }
 
-/* CONTACT */
-
-.contact-box{
-    padding:30px;
-    text-align:center;
-}
-
-.contact-box h2{
-    font-size:42px;
-}
-
-.contact-box p{
-    margin:10px auto 20px;
-    color:#999;
-    font-size:21px;
-}
-
+.contact-box{padding:32px;text-align:center}
+.contact-box h2{font-size:43px}
+.contact-box p{margin:10px auto 20px;color:#999;font-size:21px;max-width:650px}
 .discord{
-    display:inline-block;
-    padding:13px 25px;
-    border-radius:13px;
-    background:#62cfff15;
-    border:1px solid #62cfff55;
-    color:#fff;
-    font-size:23px;
+    display:inline-block;padding:12px 24px;border-radius:13px;
+    background:#62cfff12;border:1px solid #62cfff55;color:#fff;font-size:23px
 }
 
-/* RIPPLE */
+.empty{
+    display:none;text-align:center;padding:45px;color:#666;font-size:22px
+}
 
 .ripple{
-    position:absolute;
-    width:20px;
-    height:20px;
-    border-radius:50%;
-    background:rgba(92,200,255,.35);
-    transform:translate(-50%,-50%) scale(0);
-    animation:r .6s linear;
-    pointer-events:none;
+    position:absolute;width:20px;height:20px;border-radius:50%;
+    background:#5cc8ff55;transform:translate(-50%,-50%) scale(0);
+    animation:r .6s linear;pointer-events:none
 }
-
-@keyframes r{
-    to{
-        transform:translate(-50%,-50%) scale(12);
-        opacity:0;
-    }
-}
-
-/* TOAST */
+@keyframes r{to{transform:translate(-50%,-50%) scale(12);opacity:0}}
 
 .toast{
-    position:fixed;
-    right:30px;
-    bottom:30px;
-    padding:14px 20px;
-    border-radius:12px;
-    background:#15171b;
-    border:1px solid #62cfff55;
-    box-shadow:0 10px 30px #0008;
-    transform:translateY(100px);
-    opacity:0;
-    transition:.3s;
-    z-index:100;
-    font-size:18px;
+    position:fixed;right:28px;bottom:28px;padding:13px 19px;border-radius:12px;
+    background:#12161b;border:1px solid #62cfff55;box-shadow:0 10px 30px #0009;
+    transform:translateY(90px);opacity:0;transition:.3s;z-index:100;font-size:18px
 }
+.toast.show{transform:translateY(0);opacity:1}
 
-.toast.show{
-    transform:translateY(0);
-    opacity:1;
+.back-top{
+    position:fixed;right:25px;bottom:25px;width:43px;height:43px;border-radius:50%;
+    border:1px solid #ffffff15;background:#101318dd;color:#fff;cursor:pointer;
+    opacity:0;pointer-events:none;transition:.25s;z-index:20;font-size:20px
 }
+.back-top.show{opacity:1;pointer-events:auto}
 
-/* MOBILE */
-
-@media(max-width:850px){
-
-    body{
-        overflow:auto;
-    }
-
+@media(max-width:900px){
+    body{overflow:auto}
     .sidebar{
-        position:relative;
-        left:0;
-        top:0;
-        bottom:auto;
-        width:calc(100% - 20px);
-        margin:10px;
-        height:auto;
+        position:relative;left:0;top:0;bottom:auto;width:calc(100% - 20px);
+        margin:10px;height:auto
     }
-
-    .sidebar-footer{
-        display:none;
-    }
-
-    .logo{
-        margin-bottom:20px;
-    }
-
-    .nav{
-        display:grid;
-        grid-template-columns:repeat(2,1fr);
-    }
-
-    .nav button{
-        font-size:20px;
-    }
-
-    .content{
-        margin-left:0;
-        padding:25px 15px;
-        height:auto;
-        overflow:visible;
-    }
-
-    h1{
-        font-size:50px;
-    }
-
-    .stats{
-        grid-template-columns:1fr;
-    }
-
-    .code{
-        align-items:flex-start;
-    }
+    .sidebar-footer{display:none}
+    .nav{display:grid;grid-template-columns:repeat(2,1fr)}
+    .nav button{font-size:20px}
+    .content{margin-left:0;padding:25px 15px;height:auto;overflow:visible}
+    h1{font-size:52px}
+    .stats{grid-template-columns:repeat(2,1fr)}
+    .page-header{align-items:flex-start}
+}
+@media(max-width:520px){
+    .nav{grid-template-columns:1fr}
+    .stats{grid-template-columns:1fr}
+    .page-header{display:block}
+    .header-version{display:inline-block;margin-top:12px}
+    .hero{padding:25px}
+    .hero h2{font-size:35px}
+    h1{font-size:45px}
+    .code{align-items:flex-start}
 }
 
-@media(max-width:500px){
+/* SITE THEMES */
+body.theme-blue{--accent:#62cfff;--accent-soft:#62cfff12;--accent-border:#62cfff55}
+body.theme-purple{--accent:#b77cff;--accent-soft:#b77cff12;--accent-border:#b77cff55}
+body.theme-red{--accent:#ff5c6c;--accent-soft:#ff5c6c12;--accent-border:#ff5c6c55}
+body.theme-green{--accent:#5cff9b;--accent-soft:#5cff9b12;--accent-border:#5cff9b55}
+body.theme-gold{--accent:#ffd45c;--accent-soft:#ffd45c12;--accent-border:#ffd45c55}
 
-    .nav{
-        grid-template-columns:1fr;
-    }
+body.theme-purple{background:
+    radial-gradient(circle at 15% 20%,#35174a55,transparent 30%),
+    radial-gradient(circle at 85% 80%,#32164d44,transparent 30%),
+    linear-gradient(-45deg,#09070d,#171020,#0d0b14,#15101b)}
+body.theme-red{background:
+    radial-gradient(circle at 15% 20%,#4a172055,transparent 30%),
+    radial-gradient(circle at 85% 80%,#4d161644,transparent 30%),
+    linear-gradient(-45deg,#0d0708,#201013,#140b0d,#1b1012)}
+body.theme-green{background:
+    radial-gradient(circle at 15% 20%,#174a3255,transparent 30%),
+    radial-gradient(circle at 85% 80%,#164d3444,transparent 30%),
+    linear-gradient(-45deg,#070d0a,#102018,#0b140f,#101b15)}
+body.theme-gold{background:
+    radial-gradient(circle at 15% 20%,#4a3b1755,transparent 30%),
+    radial-gradient(circle at 85% 80%,#4d3c1644,transparent 30%),
+    linear-gradient(-45deg,#0d0c07,#201d10,#14130b,#1b1810)}
 
-    .hero{
-        padding:25px;
-    }
+.theme-purple .logo span,.theme-red .logo span,.theme-green .logo span,.theme-gold .logo span{color:var(--accent)}
+.theme-purple .blue,.theme-red .blue,.theme-green .blue,.theme-gold .blue{color:var(--accent)}
+.theme-purple .nav button.active,.theme-red .nav button.active,.theme-green .nav button.active,.theme-gold .nav button.active{border-color:var(--accent-border);box-shadow:0 0 22px var(--accent-soft),inset 3px 0 var(--accent)}
+.theme-purple .nav button:hover,.theme-red .nav button:hover,.theme-green .nav button:hover,.theme-gold .nav button:hover{border-color:var(--accent-border)}
+.theme-purple .card:hover,.theme-red .card:hover,.theme-green .card:hover,.theme-gold .card:hover{border-color:var(--accent-border)}
+.theme-purple .tag,.theme-red .tag,.theme-green .tag,.theme-gold .tag{background:var(--accent-soft);border-color:var(--accent-border);color:var(--accent)}
+.theme-purple .primary-btn,.theme-red .primary-btn,.theme-green .primary-btn,.theme-gold .primary-btn{background:var(--accent-soft);border-color:var(--accent-border)}
+.theme-purple .copy,.theme-red .copy,.theme-green .copy,.theme-gold .copy{border-color:var(--accent-border);background:var(--accent-soft)}
+.theme-purple .search:focus,.theme-red .search:focus,.theme-green .search:focus,.theme-gold .search:focus{border-color:var(--accent)}
+.theme-purple .status-dot,.theme-red .status-dot,.theme-green .status-dot,.theme-gold .status-dot{background:var(--accent);box-shadow:0 0 11px var(--accent)}
+.theme-purple .discord,.theme-red .discord,.theme-green .discord,.theme-gold .discord{border-color:var(--accent-border);background:var(--accent-soft)}
+.theme-purple .filter.active,.theme-red .filter.active,.theme-green .filter.active,.theme-gold .filter.active{border-color:var(--accent-border);background:var(--accent-soft)}
+.theme-purple .hero:before,.theme-red .hero:before,.theme-green .hero:before,.theme-gold .hero:before{background:var(--accent-soft)}
+.theme-purple .header-version,.theme-red .header-version,.theme-green .header-version,.theme-gold .header-version{color:var(--accent);border-color:var(--accent-border);background:var(--accent-soft)}
 
-    .hero h2{
-        font-size:34px;
-    }
+.theme-grid{grid-template-columns:repeat(auto-fit,minmax(210px,1fr))}
+.theme-card{cursor:pointer;text-align:left}
+.theme-preview{height:65px;border-radius:12px;margin-bottom:13px;border:1px solid #ffffff12}
+.preview-blue{background:linear-gradient(135deg,#071017,#62cfff)}
+.preview-purple{background:linear-gradient(135deg,#0d0714,#b77cff)}
+.preview-red{background:linear-gradient(135deg,#14070a,#ff5c6c)}
+.preview-green{background:linear-gradient(135deg,#07140d,#5cff9b)}
+.preview-gold{background:linear-gradient(135deg,#141007,#ffd45c)}
+.theme-card.selected{border-color:var(--accent-border);box-shadow:0 0 20px var(--accent-soft)}
 
-    h1{
-        font-size:44px;
-    }
-}
 </style>
 </head>
 
@@ -599,603 +300,495 @@ h1{
 <canvas id="particles"></canvas>
 <div class="cursor" id="cursor"></div>
 
-<!-- SIDEBAR -->
-
 <aside class="sidebar">
 
     <div class="logo">
-        Not Hidden<br>
-        <span>Inventory</span>
+        Not Hidden<br><span>Inventory</span>
     </div>
 
-    <input
-        class="search"
-        id="search"
-        type="text"
-        placeholder="Search..."
-        autocomplete="off"
-    >
+    <div class="search-wrap">
+        <input id="search" class="search" placeholder="Search inventory..." autocomplete="off">
+        <span class="search-icon">⌕</span>
+    </div>
 
     <nav class="nav">
-
-        <button class="active" onclick="showPage('home',this)">
-            🏠 Home
-        </button>
-
-        <button onclick="showPage('codes',this)">
-            🔑 Codes
-        </button>
-
-        <button onclick="showPage('moves',this)">
-            ⚔️ Movesets
-        </button>
-
-        <button onclick="showPage('animations',this)">
-            🎞️ Animations
-        </button>
-
-        <button onclick="showPage('contact',this)">
-            💬 Contact
-        </button>
-
+        <button class="active" onclick="showPage('home',this)">🏠 Home <span class="nav-key">1</span></button>
+        <button onclick="showPage('codes',this)">🔑 Codes <span class="nav-key">2</span></button>
+        <button onclick="showPage('moves',this)">⚔️ Movesets <span class="nav-key">3</span></button>
+        <button onclick="showPage('animations',this)">🎞️ Animations <span class="nav-key">4</span></button>
+        <button onclick="showPage('contact',this)">💬 Contact <span class="nav-key">5</span></button>
+        <button onclick="showPage('settings',this)">⚙️ Settings <span class="nav-key">6</span></button>
     </nav>
 
     <div class="sidebar-footer">
-        <span class="status">
-            <span class="status-dot"></span>
-            Inventory Online
-        </span>
-        <br>
-        V4.0
+        <span class="status"><span class="status-dot"></span> Inventory Online</span>
+        <br>Hidden Inventory V5
     </div>
-
 </aside>
 
-<!-- MAIN CONTENT -->
+<main class="content" id="content">
 
-<main class="content">
+<section id="home" class="page active">
 
-    <!-- HOME -->
-
-    <section id="home" class="page active">
-
-        <div class="page-header">
+    <div class="page-header">
+        <div>
             <h1>Home</h1>
-            <div class="subtitle">
-                Welcome to the <span class="blue">Hidden Inventory</span> wiki.
-            </div>
+            <div class="subtitle">The <span class="blue">Hidden Inventory</span> community database.</div>
         </div>
+        <span class="header-version">V5.0</span>
+    </div>
 
-        <div class="hero">
-
-            <h2>Hidden Inventory V4</h2>
-
-            <p>
-                A community-made database for codes, movesets,
-                animations and other useful information.
-            </p>
-
+    <div class="hero">
+        <h2>Welcome to Hidden Inventory.</h2>
+        <p>
+            Browse codes, movesets, animation IDs and other useful information
+            from one clean, searchable inventory.
+        </p>
+        <div class="hero-actions">
+            <button class="primary-btn" onclick="showPage('codes',document.querySelectorAll('.nav button')[1])">View Codes</button>
+            <button class="secondary-btn" onclick="showPage('moves',document.querySelectorAll('.nav button')[2])">Explore Movesets</button>
         </div>
+    </div>
 
-        <div class="stats">
+    <div class="stats">
+        <div class="stat"><div class="stat-number">V5</div><div class="stat-label">Current Version</div></div>
+        <div class="stat"><div class="stat-number" id="codeCount">3</div><div class="stat-label">Listed Codes</div></div>
+        <div class="stat"><div class="stat-number" id="moveCount">4</div><div class="stat-label">Moves Listed</div></div>
+        <div class="stat"><div class="stat-number">LIVE</div><div class="stat-label">Inventory Status</div></div>
+    </div>
 
-            <div class="stat">
-                <div class="stat-number">4</div>
-                <div class="stat-label">Current Version</div>
-            </div>
+    <div class="section-title">Quick Access</div>
 
-            <div class="stat">
-                <div class="stat-number">∞</div>
-                <div class="stat-label">Things To Discover</div>
-            </div>
-
-            <div class="stat">
-                <div class="stat-number">LIVE</div>
-                <div class="stat-label">Inventory Status</div>
-            </div>
-
+    <div class="grid">
+        <div class="card">
+            <h3>🔑 Codes</h3>
+            <p>Copy working codes instantly without manually selecting them.</p>
+            <span class="tag green">Working</span>
         </div>
-
-        <div class="grid">
-
-            <div class="card">
-                <h3>🔑 Codes</h3>
-                <p>
-                    Find the latest working codes and rewards.
-                </p>
-                <span class="tag">Updated</span>
-            </div>
-
-            <div class="card">
-                <h3>⚔️ Movesets</h3>
-                <p>
-                    Browse moves, combos and character information.
-                </p>
-                <span class="tag">Database</span>
-            </div>
-
-            <div class="card">
-                <h3>🎞️ Animations</h3>
-                <p>
-                    Keep track of useful animation IDs.
-                </p>
-                <span class="tag">IDs</span>
-            </div>
-
+        <div class="card">
+            <h3>⚔️ Movesets</h3>
+            <p>Browse moves, keys, categories and descriptions.</p>
+            <span class="tag">Database</span>
         </div>
+        <div class="card">
+            <h3>🎞️ Animations</h3>
+            <p>Keep animation IDs organized and easy to find.</p>
+            <span class="tag">IDs</span>
+        </div>
+    </div>
 
-    </section>
+</section>
 
+<section id="codes" class="page">
 
-    <!-- CODES -->
-
-    <section id="codes" class="page">
-
-        <div class="page-header">
+    <div class="page-header">
+        <div>
             <h1>Codes</h1>
-            <div class="subtitle">
-                Currently available codes.
+            <div class="subtitle">Currently listed codes and rewards.</div>
+        </div>
+    </div>
+
+    <div class="notice">Only add a code here when it has been confirmed as working.</div>
+
+    <div class="grid searchable">
+
+        <div class="card code">
+            <div>
+                <div class="code-name">WELCOME</div>
+                <div class="code-value">Reward: Free Items</div>
+                <span class="tag green">Working</span>
             </div>
+            <button class="copy" onclick="copyCode('WELCOME')">Copy</button>
         </div>
 
-        <div class="grid">
-
-            <div class="card code">
-                <div>
-                    <div class="code-name">WELCOME</div>
-                    <div class="code-value">Reward: Free Items</div>
-                </div>
-                <button class="copy" onclick="copyCode('WELCOME')">
-                    Copy
-                </button>
+        <div class="card code">
+            <div>
+                <div class="code-name">UPDATE1</div>
+                <div class="code-value">Reward: Unknown</div>
+                <span class="tag green">Working</span>
             </div>
-
-            <div class="card code">
-                <div>
-                    <div class="code-name">UPDATE1</div>
-                    <div class="code-value">Reward: Unknown</div>
-                </div>
-                <button class="copy" onclick="copyCode('UPDATE1')">
-                    Copy
-                </button>
-            </div>
-
-            <div class="card code">
-                <div>
-                    <div class="code-name">INVENTORY</div>
-                    <div class="code-value">Reward: Unknown</div>
-                </div>
-                <button class="copy" onclick="copyCode('INVENTORY')">
-                    Copy
-                </button>
-            </div>
-
+            <button class="copy" onclick="copyCode('UPDATE1')">Copy</button>
         </div>
 
-    </section>
+        <div class="card code">
+            <div>
+                <div class="code-name">INVENTORY</div>
+                <div class="code-value">Reward: Unknown</div>
+                <span class="tag green">Working</span>
+            </div>
+            <button class="copy" onclick="copyCode('INVENTORY')">Copy</button>
+        </div>
 
+    </div>
 
-    <!-- MOVESETS -->
+    <div class="empty" id="codeEmpty">No codes matched the search.</div>
+</section>
 
-    <section id="moves" class="page">
+<section id="moves" class="page">
 
-        <div class="page-header">
+    <div class="page-header">
+        <div>
             <h1>Movesets</h1>
-            <div class="subtitle">
-                Character moves and useful information.
+            <div class="subtitle">Moves, keys and categories.</div>
+        </div>
+    </div>
+
+    <div class="filters">
+        <button class="filter active" onclick="filterMoves('all',this)">All</button>
+        <button class="filter" onclick="filterMoves('normal',this)">Normal</button>
+        <button class="filter" onclick="filterMoves('ultimate',this)">Ultimate</button>
+    </div>
+
+    <div class="grid" id="movesGrid">
+
+        <div class="card entry move normal" data-type="normal">
+            <div class="entry-top">
+                <h3>Move 1</h3><span class="key">1</span>
             </div>
+            <p>Description of the first move.</p>
+            <span class="tag">Normal</span>
         </div>
 
-        <div class="grid">
-
-            <div class="card entry">
-
-                <div class="entry-top">
-                    <h3>Move 1</h3>
-                    <span class="key">1</span>
-                </div>
-
-                <p>
-                    Description of the first move.
-                </p>
-
-                <span class="tag">Normal</span>
-
+        <div class="card entry move normal" data-type="normal">
+            <div class="entry-top">
+                <h3>Move 2</h3><span class="key">2</span>
             </div>
-
-            <div class="card entry">
-
-                <div class="entry-top">
-                    <h3>Move 2</h3>
-                    <span class="key">2</span>
-                </div>
-
-                <p>
-                    Description of the second move.
-                </p>
-
-                <span class="tag">Normal</span>
-
-            </div>
-
-            <div class="card entry">
-
-                <div class="entry-top">
-                    <h3>Move 3</h3>
-                    <span class="key">3</span>
-                </div>
-
-                <p>
-                    Description of the third move.
-                </p>
-
-                <span class="tag">Normal</span>
-
-            </div>
-
-            <div class="card entry">
-
-                <div class="entry-top">
-                    <h3>Ultimate</h3>
-                    <span class="key">4</span>
-                </div>
-
-                <p>
-                    Powerful ultimate ability.
-                </p>
-
-                <span class="tag">Ultimate</span>
-
-            </div>
-
+            <p>Description of the second move.</p>
+            <span class="tag">Normal</span>
         </div>
 
-    </section>
+        <div class="card entry move normal" data-type="normal">
+            <div class="entry-top">
+                <h3>Move 3</h3><span class="key">3</span>
+            </div>
+            <p>Description of the third move.</p>
+            <span class="tag">Normal</span>
+        </div>
 
+        <div class="card entry move ultimate" data-type="ultimate">
+            <div class="entry-top">
+                <h3>Ultimate</h3><span class="key">4</span>
+            </div>
+            <p>Powerful ultimate ability.</p>
+            <span class="tag red">Ultimate</span>
+        </div>
 
-    <!-- ANIMATIONS -->
+    </div>
+</section>
 
-    <section id="animations" class="page">
+<section id="animations" class="page">
 
-        <div class="page-header">
+    <div class="page-header">
+        <div>
             <h1>Animations</h1>
-            <div class="subtitle">
-                Animation IDs and references.
-            </div>
+            <div class="subtitle">Animation IDs and references.</div>
+        </div>
+    </div>
+
+    <div class="grid searchable">
+
+        <div class="card entry">
+            <div class="entry-top"><h3>Idle</h3><span class="key">ID</span></div>
+            <p>Animation ID: <span class="blue">0000000000</span></p>
+            <span class="tag">Idle</span>
         </div>
 
-        <div class="grid">
-
-            <div class="card entry">
-
-                <div class="entry-top">
-                    <h3>Idle</h3>
-                    <span class="key">ID</span>
-                </div>
-
-                <p>
-                    Animation ID:
-                    <span class="blue">0000000000</span>
-                </p>
-
-                <span class="tag">Idle</span>
-
-            </div>
-
-            <div class="card entry">
-
-                <div class="entry-top">
-                    <h3>Attack</h3>
-                    <span class="key">ID</span>
-                </div>
-
-                <p>
-                    Animation ID:
-                    <span class="blue">0000000000</span>
-                </p>
-
-                <span class="tag">Combat</span>
-
-            </div>
-
-            <div class="card entry">
-
-                <div class="entry-top">
-                    <h3>Ultimate</h3>
-                    <span class="key">ID</span>
-                </div>
-
-                <p>
-                    Animation ID:
-                    <span class="blue">0000000000</span>
-                </p>
-
-                <span class="tag">Ultimate</span>
-
-            </div>
-
+        <div class="card entry">
+            <div class="entry-top"><h3>Attack</h3><span class="key">ID</span></div>
+            <p>Animation ID: <span class="blue">0000000000</span></p>
+            <span class="tag">Combat</span>
         </div>
 
-    </section>
+        <div class="card entry">
+            <div class="entry-top"><h3>Ultimate</h3><span class="key">ID</span></div>
+            <p>Animation ID: <span class="blue">0000000000</span></p>
+            <span class="tag red">Ultimate</span>
+        </div>
 
+    </div>
 
-    <!-- CONTACT -->
+</section>
 
-    <section id="contact" class="page">
+<section id="contact" class="page">
 
-        <div class="page-header">
+    <div class="page-header">
+        <div>
             <h1>Contact</h1>
-            <div class="subtitle">
-                Need help or want to contribute?
-            </div>
+            <div class="subtitle">Report information or contact the community.</div>
         </div>
+    </div>
 
-        <div class="card contact-box">
+    <div class="card contact-box">
+        <h2>Join the community</h2>
+        <p>
+            Have an incorrect code, missing move, animation ID or another
+            piece of information? Send it to the community.
+        </p>
+        <a class="discord" href="https://discord.gg/VDsUzgFApG" target="_blank" rel="noopener noreferrer">Join the Discord</a>
+    </div>
 
-            <h2>Join the community</h2>
+</section>
 
-            <p>
-                Report incorrect information, suggest additions,
-                or contact the developers.
-            </p>
 
-            <div class="discord">
-                Discord: YourName
-            </div>
+<section id="settings" class="page">
 
+    <div class="page-header">
+        <div>
+            <h1>Settings</h1>
+            <div class="subtitle">Customize the look of Hidden Inventory.</div>
         </div>
+    </div>
 
-    </section>
+    <div class="section-title">Site Themes</div>
+
+    <div class="grid theme-grid">
+        <button class="card theme-card selected" data-theme="blue" onclick="setTheme('blue',this)">
+            <div class="theme-preview preview-blue"></div>
+            <h3>Ocean Blue</h3>
+            <p>Default Hidden Inventory theme.</p>
+            <span class="tag">Default</span>
+        </button>
+
+        <button class="card theme-card" data-theme="purple" onclick="setTheme('purple',this)">
+            <div class="theme-preview preview-purple"></div>
+            <h3>Void Purple</h3>
+            <p>A darker purple inventory.</p>
+            <span class="tag">Purple</span>
+        </button>
+
+        <button class="card theme-card" data-theme="red" onclick="setTheme('red',this)">
+            <div class="theme-preview preview-red"></div>
+            <h3>Crimson</h3>
+            <p>A red combat-style theme.</p>
+            <span class="tag">Red</span>
+        </button>
+
+        <button class="card theme-card" data-theme="green" onclick="setTheme('green',this)">
+            <div class="theme-preview preview-green"></div>
+            <h3>Matrix</h3>
+            <p>A bright green system theme.</p>
+            <span class="tag">Green</span>
+        </button>
+
+        <button class="card theme-card" data-theme="gold" onclick="setTheme('gold',this)">
+            <div class="theme-preview preview-gold"></div>
+            <h3>Golden</h3>
+            <p>A warm gold accent theme.</p>
+            <span class="tag">Gold</span>
+        </button>
+    </div>
+
+    <div class="section-title">Music</div>
+
+    <div class="card">
+        <h3>🎵 Let It Ride</h3>
+        <p>Anno Domini Beats</p>
+        <audio controls preload="none" style="width:100%;margin-top:15px">
+            <source src="https://github.com/AzmiYT/Honoured-Inventory/raw/refs/heads/main/Let%20It%20Ride%20-%20Anno%20Domini%20Beats.mp3" type="audio/mpeg">
+            Your browser does not support audio playback.
+        </audio>
+    </div>
+
+</section>
 
 </main>
 
-<div class="toast" id="toast">
-    Copied!
-</div>
+<button class="back-top" id="backTop" onclick="scrollTopPage()">↑</button>
+<div class="toast" id="toast">Copied!</div>
 
 <script>
-
-/* PAGE NAVIGATION */
-
-function showPage(id,button){
-
-    document.querySelectorAll('.page').forEach(page=>{
-        page.classList.remove('active');
-    });
-
-    const target=document.getElementById(id);
-
-    if(target){
-        target.classList.add('active');
-    }
-
-    document.querySelectorAll('.nav button').forEach(btn=>{
-        btn.classList.remove('active');
-    });
-
-    if(button){
-        button.classList.add('active');
-    }
-
-    document.querySelector('.content').scrollTop=0;
-}
-
-
-/* SEARCH */
-
+const content=document.getElementById('content');
 const search=document.getElementById('search');
-
-search.addEventListener('input',function(){
-
-    const query=this.value.toLowerCase().trim();
-
-    document.querySelectorAll('.card').forEach(card=>{
-
-        const text=card.innerText.toLowerCase();
-
-        if(!query || text.includes(query)){
-            card.style.display='';
-        }else{
-            card.style.display='none';
-        }
-
-    });
-
-});
-
-
-/* COPY CODE */
-
-function copyCode(code){
-
-    navigator.clipboard.writeText(code)
-        .then(()=>{
-            showToast('Copied: '+code);
-        })
-        .catch(()=>{
-            showToast('Copy failed');
-        });
-
-}
-
-
-/* TOAST */
-
+const toast=document.getElementById('toast');
+const backTop=document.getElementById('backTop');
 let toastTimer;
 
-function showToast(message){
+function showPage(id,button){
+    document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));
+    const page=document.getElementById(id);
+    if(page) page.classList.add('active');
 
-    const toast=document.getElementById('toast');
+    document.querySelectorAll('.nav button').forEach(b=>b.classList.remove('active'));
+    if(button) button.classList.add('active');
 
-    toast.textContent=message;
-    toast.classList.add('show');
-
-    clearTimeout(toastTimer);
-
-    toastTimer=setTimeout(()=>{
-        toast.classList.remove('show');
-    },1800);
-
+    content.scrollTop=0;
+    search.value='';
+    resetSearch();
 }
 
+function copyCode(code){
+    navigator.clipboard.writeText(code).then(()=>{
+        showToast('Copied: '+code);
+    }).catch(()=>{
+        showToast('Could not copy code');
+    });
+}
 
-/* CURSOR GLOW */
+function showToast(message){
+    toast.textContent=message;
+    toast.classList.add('show');
+    clearTimeout(toastTimer);
+    toastTimer=setTimeout(()=>toast.classList.remove('show'),1800);
+}
 
-const cursor=document.getElementById('cursor');
+function filterMoves(type,button){
+    document.querySelectorAll('.filter').forEach(b=>b.classList.remove('active'));
+    button.classList.add('active');
 
-document.addEventListener('mousemove',event=>{
+    document.querySelectorAll('.move').forEach(move=>{
+        move.style.display=type==='all'||move.dataset.type===type?'':'none';
+    });
+}
 
-    cursor.style.left=event.clientX+'px';
-    cursor.style.top=event.clientY+'px';
+function resetSearch(){
+    document.querySelectorAll('.searchable .card').forEach(card=>card.style.display='');
+    const empty=document.getElementById('codeEmpty');
+    if(empty) empty.style.display='none';
+}
 
+search.addEventListener('input',()=>{
+    const query=search.value.toLowerCase().trim();
+    const page=document.querySelector('.page.active');
+    if(!page) return;
+
+    const cards=page.querySelectorAll('.searchable .card');
+    if(!cards.length){
+        document.querySelectorAll('.page.active .card').forEach(card=>{
+            const match=card.innerText.toLowerCase().includes(query);
+            card.style.display=!query||match?'':'none';
+        });
+        return;
+    }
+
+    let visible=0;
+    cards.forEach(card=>{
+        const match=!query||card.innerText.toLowerCase().includes(query);
+        card.style.display=match?'':'none';
+        if(match) visible++;
+    });
+
+    const empty=document.getElementById('codeEmpty');
+    if(empty) empty.style.display=visible===0?'block':'none';
 });
 
-
-/* BUTTON RIPPLE */
-
 document.addEventListener('click',event=>{
-
     const button=event.target.closest('button');
-
     if(!button) return;
 
     const ripple=document.createElement('span');
-
     ripple.className='ripple';
-
     const rect=button.getBoundingClientRect();
-
     ripple.style.left=(event.clientX-rect.left)+'px';
     ripple.style.top=(event.clientY-rect.top)+'px';
-
     button.appendChild(ripple);
+    setTimeout(()=>ripple.remove(),600);
+});
 
-    setTimeout(()=>{
-        ripple.remove();
-    },600);
+document.addEventListener('mousemove',event=>{
+    const cursor=document.getElementById('cursor');
+    cursor.style.left=event.clientX+'px';
+    cursor.style.top=event.clientY+'px';
+});
 
+content.addEventListener('scroll',()=>{
+    backTop.classList.toggle('show',content.scrollTop>350);
+});
+
+function scrollTopPage(){
+    content.scrollTo({top:0,behavior:'smooth'});
+}
+
+document.addEventListener('keydown',event=>{
+    if(event.target.tagName==='INPUT') return;
+
+    const buttons=document.querySelectorAll('.nav button');
+    if(event.key>='1'&&event.key<='5'){
+        buttons[Number(event.key)-1].click();
+    }
+
+    if(event.key==='Escape'){
+        search.value='';
+        resetSearch();
+    }
 });
 
 
-/* PARTICLES */
+/* THEMES */
+const themeNames=['blue','purple','red','green','gold'];
 
+function setTheme(theme,button){
+    document.body.classList.remove(...themeNames.map(t=>'theme-'+t));
+    document.body.classList.add('theme-'+theme);
+
+    document.querySelectorAll('.theme-card').forEach(card=>{
+        card.classList.remove('selected');
+    });
+
+    if(button) button.classList.add('selected');
+
+    localStorage.setItem('hiddenInventoryTheme',theme);
+    showToast('Theme changed to '+theme.charAt(0).toUpperCase()+theme.slice(1));
+}
+
+const savedTheme=localStorage.getItem('hiddenInventoryTheme')||'blue';
+document.body.classList.add('theme-'+savedTheme);
+
+document.querySelectorAll('.theme-card').forEach(card=>{
+    if(card.dataset.theme===savedTheme) card.classList.add('selected');
+});
+
+/* Particles */
 const canvas=document.getElementById('particles');
 const ctx=canvas.getContext('2d');
-
 let particles=[];
 
 function resizeCanvas(){
-
-    canvas.width=window.innerWidth;
-    canvas.height=window.innerHeight;
-
+    canvas.width=innerWidth;
+    canvas.height=innerHeight;
 }
 
 function createParticles(){
-
     particles=[];
-
-    for(let i=0;i<70;i++){
-
+    for(let i=0;i<75;i++){
         particles.push({
-
             x:Math.random()*canvas.width,
-
             y:Math.random()*canvas.height,
-
             size:Math.random()*2+0.5,
-
-            speed:Math.random()*0.7+0.2,
-
-            opacity:Math.random()*0.5+0.1
-
+            speed:Math.random()*0.7+0.15,
+            opacity:Math.random()*0.45+0.08
         });
-
     }
-
 }
 
 function animateParticles(){
-
-    ctx.clearRect(
-        0,
-        0,
-        canvas.width,
-        canvas.height
-    );
+    ctx.clearRect(0,0,canvas.width,canvas.height);
 
     particles.forEach(p=>{
-
         p.y-=p.speed;
 
         if(p.y<0){
-
             p.y=canvas.height;
             p.x=Math.random()*canvas.width;
-
         }
 
         ctx.beginPath();
-
-        ctx.arc(
-            p.x,
-            p.y,
-            p.size,
-            0,
-            Math.PI*2
-        );
-
-        ctx.fillStyle=
-            `rgba(92,200,255,${p.opacity})`;
-
+        ctx.arc(p.x,p.y,p.size,0,Math.PI*2);
+        ctx.fillStyle=`rgba(92,200,255,${p.opacity})`;
         ctx.fill();
-
     });
 
     requestAnimationFrame(animateParticles);
-
 }
 
 resizeCanvas();
 createParticles();
 animateParticles();
 
-window.addEventListener('resize',()=>{
-
+addEventListener('resize',()=>{
     resizeCanvas();
     createParticles();
-
 });
-
-
-/* KEYBOARD NAVIGATION */
-
-document.addEventListener('keydown',event=>{
-
-    if(event.key==='1'){
-        document.querySelector('.nav button:nth-child(1)').click();
-    }
-
-    if(event.key==='2'){
-        document.querySelector('.nav button:nth-child(2)').click();
-    }
-
-    if(event.key==='3'){
-        document.querySelector('.nav button:nth-child(3)').click();
-    }
-
-    if(event.key==='4'){
-        document.querySelector('.nav button:nth-child(4)').click();
-    }
-
-    if(event.key==='5'){
-        document.querySelector('.nav button:nth-child(5)').click();
-    }
-
-});
-
 </script>
 
 </body>
 </html>
-```
