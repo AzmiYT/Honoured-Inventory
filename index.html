@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1.0">
-<title>Hidden Inventory V5</title>
+<title>Hidden Inventory V6</title>
 <link href="https://fonts.googleapis.com/css2?family=Patrick+Hand&display=swap" rel="stylesheet">
 
 <style>
@@ -35,7 +35,7 @@ body{
     backdrop-filter:blur(22px);-webkit-backdrop-filter:blur(22px);
     border:1px solid #ffffff12;border-radius:25px;
     box-shadow:0 0 40px #0008,inset 0 0 30px #ffffff03;
-    z-index:10;overflow:hidden
+    z-index:10;overflow-y:auto;overflow-x:hidden
 }
 .logo{
     font-size:39px;line-height:.9;margin:4px 0 28px;
@@ -73,7 +73,7 @@ body{
     float:right;color:#555;font-size:15px;margin-top:5px
 }
 .sidebar-footer{
-    position:absolute;bottom:19px;left:22px;right:22px;
+    position:sticky;bottom:0;left:auto;right:auto;margin-top:12px;padding:10px 0;background:rgba(10,13,17,.96);border-radius:10px;
     color:#666;font-size:15px;text-align:center
 }
 .status{display:inline-flex;align-items:center;gap:7px}
@@ -292,6 +292,27 @@ body.theme-gold{background:
 .preview-gold{background:linear-gradient(135deg,#141007,#ffd45c)}
 .theme-card.selected{border-color:var(--accent-border);box-shadow:0 0 20px var(--accent-soft)}
 
+
+/* V6 additions */
+.sidebar::-webkit-scrollbar{width:7px}.sidebar::-webkit-scrollbar-track{background:transparent}.sidebar::-webkit-scrollbar-thumb{background:#ffffff18;border-radius:20px}.sidebar::-webkit-scrollbar-thumb:hover{background:#62cfff55}
+.search-hit{animation:searchHit 1.5s ease;outline:2px solid var(--accent);box-shadow:0 0 35px var(--accent-soft),inset 0 0 25px #ffffff08!important}
+@keyframes searchHit{0%,100%{transform:scale(1)}35%{transform:scale(1.025);filter:brightness(1.45)}70%{transform:scale(.997)}}
+.search-mark{background:#ffe66d;color:#111;border-radius:4px;padding:0 2px}
+.glitch-overlay{position:fixed;inset:0;z-index:9990;pointer-events:none;display:none;background:repeating-linear-gradient(0deg,transparent 0 3px,#fff1 4px 5px);mix-blend-mode:screen}
+body.glitching .glitch-overlay{display:block;animation:glitchOverlay .12s steps(2) infinite}
+body.glitching .content,body.glitching .sidebar{filter:contrast(1.25) saturate(1.5);transform:translateX(3px)}
+@keyframes glitchOverlay{0%{clip-path:inset(5% 0 85% 0);transform:translate(-7px)}25%{clip-path:inset(55% 0 20% 0);transform:translate(7px)}50%{clip-path:inset(20% 0 60% 0);transform:translate(-4px)}75%{clip-path:inset(70% 0 5% 0);transform:translate(5px)}100%{clip-path:inset(0);transform:translate(0)}}
+.glitch404{position:fixed;inset:0;z-index:100000;background:#050505;color:#fff;display:flex;align-items:center;justify-content:center;text-align:center;font-family:monospace}
+.glitch404 h1{font:120px monospace;color:#ff3344;text-shadow:4px 0 #00ffff,-4px 0 #ff00aa}.glitch404 p{font:18px monospace;color:#888;margin-top:10px}
+.theme-grid .secret-theme{display:block}
+body.theme-secret{--accent:#00fff0;--accent-soft:#00fff012;--accent-border:#00fff077;background:linear-gradient(-45deg,#030303,#160018,#001b1b,#07000d);background-size:400% 400%}
+body.theme-secret .logo span{color:#00fff0}body.theme-secret .nav button.active{border-color:#00fff077;box-shadow:0 0 30px #00fff044,inset 3px 0 #00fff0}
+.preview-secret{background:linear-gradient(135deg,#00fff0,#ff00aa,#050505);background-size:250% 250%;animation:secretPreview 2s linear infinite}
+@keyframes secretPreview{to{background-position:250% 250%}}
+.setting-toggle{padding:11px 18px;border-radius:12px;background:#111419;color:#fff;border:1px solid #ffffff20;cursor:pointer;font-size:18px}.setting-toggle.on{border-color:var(--accent);box-shadow:0 0 18px var(--accent-soft)}
+.volume-slider{width:100%;accent-color:var(--accent);cursor:pointer;margin-top:14px}
+.music-row{display:flex;align-items:center;gap:12px;margin-top:14px;flex-wrap:wrap}.music-button{padding:10px 16px;border-radius:12px;background:#111419;color:#fff;border:1px solid #ffffff20;cursor:pointer;font-size:18px}.music-button:hover{border-color:var(--accent)}
+
 </style>
 </head>
 
@@ -299,6 +320,7 @@ body.theme-gold{background:
 
 <canvas id="particles"></canvas>
 <div class="cursor" id="cursor"></div>
+<div class="glitch-overlay"></div>
 
 <aside class="sidebar">
 
@@ -322,7 +344,7 @@ body.theme-gold{background:
 
     <div class="sidebar-footer">
         <span class="status"><span class="status-dot"></span> Inventory Online</span>
-        <br>Hidden Inventory V5
+        <br>Hidden Inventory V6
     </div>
 </aside>
 
@@ -335,7 +357,7 @@ body.theme-gold{background:
             <h1>Home</h1>
             <div class="subtitle">The <span class="blue">Hidden Inventory</span> community database.</div>
         </div>
-        <span class="header-version">V5.0</span>
+        <span class="header-version">V6.0</span>
     </div>
 
     <div class="hero">
@@ -583,10 +605,22 @@ body.theme-gold{background:
     <div class="card">
         <h3>🎵 Let It Ride</h3>
         <p>Anno Domini Beats</p>
-        <audio controls preload="none" style="width:100%;margin-top:15px">
+        <div class="music-row">
+            <button class="music-button" id="musicToggle">▶ Play</button>
+            <span id="volumeText">Volume: 50%</span>
+        </div>
+        <input class="volume-slider" id="musicVolume" type="range" min="0" max="100" value="50">
+        <audio id="musicPlayer" loop preload="none">
             <source src="https://github.com/AzmiYT/Honoured-Inventory/raw/refs/heads/main/Let%20It%20Ride%20-%20Anno%20Domini%20Beats.mp3" type="audio/mpeg">
-            Your browser does not support audio playback.
         </audio>
+    </div>
+
+    <div class="section-title">Effects</div>
+    <div class="card">
+        <div style="display:flex;align-items:center;justify-content:space-between;gap:20px">
+            <div><h3>📺 Glitch Effects</h3><p>Every 60 seconds, there is a 50% chance of a short glitch.</p></div>
+            <button class="setting-toggle" id="glitchToggle">OFF</button>
+        </div>
     </div>
 
 </section>
@@ -641,6 +675,8 @@ function filterMoves(type,button){
 }
 
 function resetSearch(){
+    document.querySelectorAll('.search-mark').forEach(mark=>mark.replaceWith(document.createTextNode(mark.textContent)));
+    document.querySelectorAll('.search-hit').forEach(card=>card.classList.remove('search-hit'));
     document.querySelectorAll('.searchable .card').forEach(card=>card.style.display='');
     const empty=document.getElementById('codeEmpty');
     if(empty) empty.style.display='none';
@@ -648,28 +684,42 @@ function resetSearch(){
 
 search.addEventListener('input',()=>{
     const query=search.value.toLowerCase().trim();
-    const page=document.querySelector('.page.active');
-    if(!page) return;
+    if(!query){resetSearch();return;}
+    if(query==='secret time'){unlockSecretTheme();return;}
 
-    const cards=page.querySelectorAll('.searchable .card');
-    if(!cards.length){
-        document.querySelectorAll('.page.active .card').forEach(card=>{
-            const match=card.innerText.toLowerCase().includes(query);
-            card.style.display=!query||match?'':'none';
-        });
+    resetSearch();
+    const allCards=[...document.querySelectorAll('.searchable .card')];
+    const match=allCards.find(card=>card.innerText.toLowerCase().includes(query));
+    if(!match){
+        const empty=document.getElementById('codeEmpty');
+        if(empty) empty.style.display='block';
         return;
     }
 
-    let visible=0;
-    cards.forEach(card=>{
-        const match=!query||card.innerText.toLowerCase().includes(query);
-        card.style.display=match?'':'none';
-        if(match) visible++;
-    });
-
-    const empty=document.getElementById('codeEmpty');
-    if(empty) empty.style.display=visible===0?'block':'none';
+    const page=match.closest('.page');
+    const navButton=[...document.querySelectorAll('.nav button')].find(b=>b.getAttribute('onclick')?.includes("'"+page.id+"'"));
+    showPage(page.id,navButton);
+    search.value=query;
+    match.style.display='';
+    match.classList.add('search-hit');
+    highlightText(match,query);
+    setTimeout(()=>match.scrollIntoView({behavior:'smooth',block:'center'}),80);
 });
+
+function highlightText(element,query){
+    const walker=document.createTreeWalker(element,NodeFilter.SHOW_TEXT);
+    const nodes=[];while(walker.nextNode()) nodes.push(walker.currentNode);
+    const escaped=query.replace(/[.*+?^${}()|[\\]\\]/g,'\\$&');
+    const re=new RegExp(escaped,'gi');
+    nodes.forEach(node=>{
+        if(!node.nodeValue || !re.test(node.nodeValue)) return;
+        re.lastIndex=0;
+        const frag=document.createDocumentFragment();let last=0;
+        node.nodeValue.replace(re,(m,offset)=>{frag.appendChild(document.createTextNode(node.nodeValue.slice(last,offset)));const mark=document.createElement('span');mark.className='search-mark';mark.textContent=m;frag.appendChild(mark);last=offset+m.length;});
+        frag.appendChild(document.createTextNode(node.nodeValue.slice(last)));
+        node.parentNode.replaceChild(frag,node);
+    });
+}
 
 document.addEventListener('click',event=>{
     const button=event.target.closest('button');
@@ -788,6 +838,88 @@ addEventListener('resize',()=>{
     resizeCanvas();
     createParticles();
 });
+
+
+/* ================= V6 EASTER EGGS + EFFECTS ================= */
+const glitchToggle=document.getElementById('glitchToggle');
+let glitchEnabled=localStorage.getItem('hiddenInventoryGlitch')==='true';
+function syncGlitchToggle(){if(!glitchToggle)return;glitchToggle.textContent=glitchEnabled?'ON':'OFF';glitchToggle.classList.toggle('on',glitchEnabled)}
+if(glitchToggle){
+    glitchToggle.addEventListener('click',()=>{glitchEnabled=!glitchEnabled;localStorage.setItem('hiddenInventoryGlitch',glitchEnabled);syncGlitchToggle();showToast('Glitch effects '+(glitchEnabled?'enabled':'disabled'));});
+    syncGlitchToggle();
+}
+function runGlitch(){
+    document.body.classList.add('glitching');
+    setTimeout(()=>document.body.classList.remove('glitching'),2200);
+}
+setInterval(()=>{if(glitchEnabled && Math.random()<0.5) runGlitch();},60000);
+
+/* Secret theme: search exactly "secret time" */
+const secretThemeNames=['blue','purple','red','green','gold','secret'];
+function unlockSecretTheme(){
+    let card=document.querySelector('.secret-theme');
+    if(!card){
+        const grid=document.querySelector('.theme-grid');
+        if(!grid)return;
+        card=document.createElement('button');
+        card.className='card theme-card secret-theme';
+        card.dataset.theme='secret';
+        card.innerHTML='<div class="theme-preview preview-secret"></div><h3>???</h3><p>A theme that was never meant to be found.</p><span class="tag">SECRET</span>';
+        grid.appendChild(card);
+        card.addEventListener('click',()=>setTheme('secret',card));
+    }
+    const settingsBtn=[...document.querySelectorAll('.nav button')].find(b=>b.getAttribute('onclick')?.includes("'settings'"));
+    showPage('settings',settingsBtn);
+    document.querySelectorAll('.theme-card').forEach(c=>c.classList.remove('selected'));
+    card.classList.add('selected');
+    setTheme('secret',card);
+    showToast('🔐 SECRET THEME UNLOCKED');
+}
+
+/* Music Easter egg: 0% ↔ 100% five times */
+const music=document.getElementById('musicPlayer');
+const musicToggle=document.getElementById('musicToggle');
+const musicVolume=document.getElementById('musicVolume');
+const volumeText=document.getElementById('volumeText');
+let musicPattern=0,lastVolume=Number(musicVolume?.value||50);
+if(music){music.volume=0.5;music.loop=true;}
+if(musicToggle){
+    musicToggle.addEventListener('click',async()=>{
+        if(music.paused){try{await music.play();musicToggle.textContent='⏸ Pause';}catch(e){showToast('Browser blocked autoplay — press Play again.');}}
+        else{music.pause();musicToggle.textContent='▶ Play';}
+    });
+}
+if(musicVolume){
+    musicVolume.addEventListener('input',()=>{
+        const v=Number(musicVolume.value);
+        if(music) music.volume=v/100;
+        if(volumeText) volumeText.textContent='Volume: '+v+'%';
+        if((lastVolume<=5&&v>=95)||(lastVolume>=95&&v<=5)) musicPattern++;
+        else if(v>5&&v<95) musicPattern=0;
+        lastVolume=v;
+        if(musicPattern>=5){
+            musicPattern=0;showToast('🎵 You found the music secret!');runGlitch();
+        }
+    });
+}
+
+/* Logo secret: seven clicks */
+const logo=document.querySelector('.logo');let logoClicks=0,logoTimer;
+if(logo){logo.addEventListener('click',()=>{logoClicks++;clearTimeout(logoTimer);logoTimer=setTimeout(()=>logoClicks=0,1600);if(logoClicks>=7){logoClicks=0;showToast('👁️ You found the logo secret.');runGlitch();}})}
+
+/* Secret key sequence: ↑ ↓ ← → B A */
+const secretSequence=['ArrowUp','ArrowDown','ArrowLeft','ArrowRight','b','a'];let sequenceIndex=0;
+document.addEventListener('keydown',e=>{
+    if(e.key===secretSequence[sequenceIndex]){sequenceIndex++;if(sequenceIndex===secretSequence.length){sequenceIndex=0;showToast('🔓 Secret key sequence activated!')}}else sequenceIndex=e.key===secretSequence[0]?1:0;
+});
+
+/* Button spam: fast clicks, then a 20% fake 404 */
+let clickTimes=[];
+document.addEventListener('click',()=>{
+    const now=Date.now();clickTimes.push(now);clickTimes=clickTimes.filter(t=>now-t<900);
+    if(clickTimes.length>=12){clickTimes=[];if(Math.random()<0.2){document.body.innerHTML='<div class="glitch404"><div><h1>404</h1><p>Something went wrong.</p><p>Refresh the page to recover.</p></div></div>';}}
+});
+
 </script>
 
 </body>
